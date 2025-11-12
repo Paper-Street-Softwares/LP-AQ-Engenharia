@@ -30,6 +30,7 @@ export default function AboutModal() {
             label={t("about.ctaButtonText")}
             animation={false}
             className="hover:scale-105"
+            sh
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
