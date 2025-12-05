@@ -26,15 +26,15 @@ export default function Team() {
           <div className="flex flex-col gap-[20px] tablet1:flex-wrap justify-evenly tablet1:items-start tablet1:gap-[20px]">
             <div className="flex flex-wrap justify-center gap-6 items-start">
               <TeamMember
-                img={content.texts.team.members.member1.img.img}
-                alt={content.texts.team.members.member1.img.alt}
-                name={t("team.team1.title")}
-                role={t("team.team1.subtitle")}
-                modalTitle={t("team.team1.title")}
+                img={content.texts.team.members.member4.img.img}
+                alt={content.texts.team.members.member4.img.alt}
+                name={t("team.team4.title")}
+                role={t("team.team4.subtitle")}
+                modalTitle={t("team.team4.title")}
                 modalContent={
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: t("team.team1.description"),
+                      __html: t("team.team4.description"),
                     }}
                   ></span>
                 }
@@ -67,16 +67,17 @@ export default function Team() {
                   ></span>
                 }
               />
+
               <TeamMember
-                img={content.texts.team.members.member4.img.img}
-                alt={content.texts.team.members.member4.img.alt}
-                name={t("team.team4.title")}
-                role={t("team.team4.subtitle")}
-                modalTitle={t("team.team4.title")}
+                img={content.texts.team.members.member1.img.img}
+                alt={content.texts.team.members.member1.img.alt}
+                name={t("team.team1.title")}
+                role={t("team.team1.subtitle")}
+                modalTitle={t("team.team1.title")}
                 modalContent={
                   <span
                     dangerouslySetInnerHTML={{
-                      __html: t("team.team4.description"),
+                      __html: t("team.team1.description"),
                     }}
                   ></span>
                 }
