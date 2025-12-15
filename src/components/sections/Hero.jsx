@@ -1,13 +1,14 @@
-import MotionDivDownToUp from "../animation/MotionDivDownToUp";
-import content from "../../content/content";
-import Button from "../interactives/Button";
-import { useTranslation } from "react-i18next";
-import SectionArea from "../sectionElements/SectionArea";
-import SectionWrapper from "../sectionElements/SectionWrapper";
-import ImageGallery from "react-image-gallery";
-import heroImg1 from "../../assets/imgs/hero/lawHero.webp";
-import heroImg2 from "../../assets/imgs/hero/lawHero1.webp";
-import "react-image-gallery/styles/css/image-gallery.css";
+import MotionDivDownToUp from '../animation/MotionDivDownToUp'
+import content from '../../content/content'
+import Button from '../interactives/Button'
+import { useTranslation } from 'react-i18next'
+import SectionArea from '../sectionElements/SectionArea'
+import SectionWrapper from '../sectionElements/SectionWrapper'
+import ImageGallery from 'react-image-gallery'
+import heroImg1 from '../../assets/imgs/hero/lawHero.webp'
+import heroImg2 from '../../assets/imgs/hero/lawHero1.webp'
+import 'react-image-gallery/styles/css/image-gallery.css'
+import { Instagram } from 'lucide-react'
 
 export default function Hero({
   colorMode,
@@ -24,17 +25,17 @@ export default function Hero({
       original: heroImg2,
       thumbnail: heroImg2,
     },
-  ];
-  const { t } = useTranslation();
-  const isMobile = window.innerWidth < 1024;
+  ]
+  const { t } = useTranslation()
+  const isMobile = window.innerWidth < 1024
 
   // Cores de acordo com o tema
   const backgroundClasses = {
-    dark: "bg-bgFixedDark",
-    light: "bg-bgFixedLight",
-    default: "bg-bgSectionDark",
-  };
-  const bgGradient = backgroundClasses[colorMode] || backgroundClasses.default;
+    dark: 'bg-bgFixedDark',
+    light: 'bg-bgFixedLight',
+    default: 'bg-bgSectionDark',
+  }
+  const bgGradient = backgroundClasses[colorMode] || backgroundClasses.default
 
   const renderHeroContent = ({
     minititleColor,
@@ -47,9 +48,12 @@ export default function Hero({
         <MotionDivDownToUp>
           <div className="flex justify-center w-auto text-center desktop1:justify-start desktop1:text-left font-mainFont text-paragraph4">
             <p
-              className={`mb-[16px] rounded-md px-[16px] py-[6px] inline-block text-paragraph2 ${minititleColor}`}
+              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-semibold tracking-widest uppercase text-white/80 mb-8 w-fit backdrop-blur-sm${minititleColor}`}
             >
-              {t("hero.miniTag")}
+              <span>
+                <div className="bg-white/50 w-[7px] h-[7px] rounded-full"></div>
+              </span>
+              {t('hero.miniTag')}
             </p>
           </div>
         </MotionDivDownToUp>
@@ -58,14 +62,21 @@ export default function Hero({
           <div
             className={`flex justify-center desktop1:justify-start font-medium leading-[40px] phone3:leading-[42px] tablet1:leading-[70px] desktop1:leading-[60px] desktop2:leading-[65px] text-center desktop1:text-left text-title4 phone2:text-title5 phone3:text-title5 tablet1:text-title7 mb-2 ${titleTextColor}`}
           >
-            <h1 dangerouslySetInnerHTML={{ __html: t("hero.title") }} />
+            <h1
+              className=""
+              dangerouslySetInnerHTML={{ __html: t('hero.title') }}
+            />
           </div>
         </MotionDivDownToUp>
 
         <MotionDivDownToUp>
-          <div className="flex justify-center w-full text-center desktop1:text-left desktop1:justify-start font-secondFont text-paragraph4 phone3:text-paragraph5">
-            <p className={`mb-[32px] ${subtitleTextColor}`}>
-              {t("hero.subtitle")}
+          {' '}
+          <div className="flex gap-3 items-center justify-center mb-[32px] mt-2 w-full text-center desktop1:text-left desktop1:justify-start font-secondFont text-paragraph4 phone3:text-paragraph5">
+            <span>
+              <div className="bg-white/5 w-[2px] h-[50px]"></div>
+            </span>
+            <p className={`${subtitleTextColor} text-white/50 font-extralight`}>
+              {t('hero.subtitle')}
             </p>
           </div>
         </MotionDivDownToUp>
@@ -74,8 +85,8 @@ export default function Hero({
           <MotionDivDownToUp>
             <div className="flex justify-center w-full desktop1:justify-start mb-[32px]">
               <Button
-                aria-label={t("hero.ctaButtonAriaLabel")}
-                label={t("hero.ctaButtonText")}
+                aria-label={t('hero.ctaButtonAriaLabel')}
+                label={t('hero.ctaButtonText')}
                 animation
                 className="w-[100%]"
                 icon={
@@ -93,16 +104,27 @@ export default function Hero({
             </div>
 
             <div className="flex justify-center desktop1:justify-start">
-              <div
+              <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
+                <div className="flex gap-4">
+                  <span className=" p-2 rounded-full border border-white/10">
+                    {content.texts.hero.obsHero.icon}
+                  </span>
+                </div>
+                <div className="h-px w-12 bg-white/10" />
+                <p className="text-xs text-white/40 max-w-[250px] font-extralight">
+                  {t('hero.obsHero.text')}{' '}
+                </p>
+              </div>
+              {/* <div
                 className={`flex flex-col items-center desktop1:flex-row ${obsTextColorOverride}`}
               >
                 <span>{content.texts.hero.obsHero.icon}</span>
                 <p
                   className={`ml-[10px] text-center font-secondFont desktop1:text-start mt-[12px] desktop1:mt-0 ${obsTextColorOverride}`}
                 >
-                  {t("hero.obsHero.text")}{" "}
+                 
                 </p>
-              </div>
+              </div> */}
             </div>
           </MotionDivDownToUp>
 
@@ -120,37 +142,37 @@ export default function Hero({
           </MotionDivDownToUp> */}
         </div>
       </div>
-    );
-  };
+    )
+  }
   // Seleciona a versão correta
-  let HeroContent;
+  let HeroContent
   if (panoramica) {
     HeroContent = renderHeroContent({
       minititleColor: isMobile
-        ? "bg-minititle text-black"
-        : "bg-primary text-minititleDarkLabel",
-      titleTextColor: isMobile ? "text-primary" : "text-primary",
-      subtitleTextColor: isMobile ? "text-white" : "text-primary",
-      obsTextColorOverride: isMobile ? "text-white" : "text-primary",
-    });
+        ? 'bg-minititle text-black'
+        : 'bg-primary text-minititleDarkLabel',
+      titleTextColor: isMobile ? 'text-primary' : 'text-primary',
+      subtitleTextColor: isMobile ? 'text-white' : 'text-primary',
+      obsTextColorOverride: isMobile ? 'text-white' : 'text-primary',
+    })
   } else if (influencer) {
     HeroContent = renderHeroContent({
       minititleColor: isMobile
-        ? "bg-minititle text-white"
-        : "bg-primary text-minititleDarkLabel",
-      titleTextColor: isMobile ? "text-primary" : "text-primary",
-      subtitleTextColor: "text-primary",
-      obsTextColorOverride: "text-primary",
-    });
+        ? 'bg-minititle text-white'
+        : 'bg-primary text-minititleDarkLabel',
+      titleTextColor: isMobile ? 'text-primary' : 'text-primary',
+      subtitleTextColor: 'text-primary',
+      obsTextColorOverride: 'text-primary',
+    })
   } else {
     HeroContent = renderHeroContent({
       minititleColor: isMobile
-        ? "bg-minititle text-minititleLightLabel"
-        : "bg-minititle text-minititleDarkLabel",
-      titleTextColor: "text-white",
-      subtitleTextColor: "text-white",
-      obsTextColorOverride: "text-white",
-    });
+        ? 'bg-minititle text-minititleLightLabel'
+        : 'bg-minititle text-minititleDarkLabel',
+      titleTextColor: 'text-white',
+      subtitleTextColor: 'text-white',
+      obsTextColorOverride: 'text-white',
+    })
   }
 
   return (
@@ -166,13 +188,15 @@ export default function Hero({
               <div className="flex flex-col-reverse gap-[40px] desktop1:flex-row desktop1:justify-between mx-auto w-[90%] max-w-[1215px] items-center pb-[64px] desktop1:pt-[68px] desktop1:pb-[96px]">
                 {HeroContent}
                 {/* Imagem principal */}
-                <div className="flex justify-center w-full tablet1:w-[450px] desktop1:w-[42%] desktop2:w-[42.8%]">
+                <div className="flex justify-center relative w-[90%] tablet1:w-[450px] desktop1:w-[42%] desktop2:w-[42.8%]">
                   <MotionDivDownToUp className="relative flex justify-center w-full">
+                    <div className="absolute top-[-20px] right-[-20px] w-[100px] h-[100px] border-t-2 border-r-2 border-white/20 rounded-tr-2xl" />
                     <picture>
                       <source
                         srcSet={content.texts.hero.heroDefaultImageMobile}
                         media="(max-width: 424px)"
                       />
+
                       <img
                         src={content.texts.hero.heroDefaultImage}
                         alt={content.texts.hero.alt}
@@ -180,15 +204,44 @@ export default function Hero({
                         decoding="sync"
                         width="930"
                         height="1287"
-                        className={`mt-[20px] desktop1:mt-0 rounded-xl w-full  object-cover
+                        className={`desktop1:mt-0 rounded-xl w-full aspect-[3/4] object-cover
                         ${
-                          colorMode === "light"
-                            ? "desktop1:shadow-custom-opacity desktop1:shadow-shadowHero/10"
-                            : "shadow-custom-opacity shadow-shadowHero/10"
+                          colorMode === 'light'
+                            ? 'desktop1:shadow-custom-opacity desktop1:shadow-shadowHero/10'
+                            : 'shadow-custom-opacity shadow-shadowHero/10'
                         }`}
                       />
                     </picture>
+                    <div className="absolute bottom-[-20px] left-[-20px] w-[100px] h-[100px] border-b-2 border-l-2 border-white/20 rounded-bl-2xl" />
+                    <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
+                      <div className="bg-[#242833] p-3 rounded-tr-2xl w-[150px] phone2:w-full max-w-[280px] shadow-lg border-t border-r border-white/5 relative">
+                        {/* Corner accent */}
+                        <div className="absolute -top-4 left-0 w-4 h-4 bg-transparent shadow-[-5px_5px_0_0_#242833] rounded-bl-full" />
+                        <div className="absolute bottom-0 -right-4 w-4 h-4 bg-transparent shadow-[-5px_5px_0_0_#242833] rounded-bl-full" />
 
+                        <h3 className="text-white text-paragraph2 flex justify-center phone2:justify-start phone2:text-paragraph4 font-bold text-lg mb-2 font-mainFont">
+                          Alves e Queiroz
+                        </h3>
+                        <div className="flex flex-col gap-2">
+                          <div className="flex flex-col phone2:flex-row gap-1 phone2:gap-0 justify-between items-center text-xs text-white/60 border-b border-white/10 pb-1">
+                            <span className="text-paragraph2">
+                              Izabela Alves
+                            </span>
+                            <span className="font-secondFont text-paragraph1 text-white/40">
+                              CREA 50068
+                            </span>
+                          </div>
+                          <div className="flex flex-col phone2:flex-row gap-1 phone2:gap-0 justify-between items-center text-xs text-white/60 border-b border-white/10 pb-1">
+                            <span className="text-paragraph2">
+                              Grazielle Siqueira
+                            </span>
+                            <span className="font-secondFont text-paragraph1 text-white/40">
+                              CREA 57140
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     {/* <div className="w-full">
                       <ImageGallery
                         items={images}
@@ -290,7 +343,7 @@ export default function Hero({
                     <MotionDivDownToUp>
                       <div className="flex justify-center w-auto text-center desktop1:justify-start desktop1:text-left font-secondFont text-paragraph4">
                         <p className="mb-[16px] bg-minititleDarkLabel text-primary bg-opacity-100 rounded-md px-[16px] py-[6px] inline-block text-paragraph2">
-                          {t("hero.miniTag")}
+                          {t('hero.miniTag')}
                         </p>
                       </div>
                     </MotionDivDownToUp>
@@ -299,24 +352,24 @@ export default function Hero({
                         <h1>
                           <span
                             dangerouslySetInnerHTML={{
-                              __html: t("hero.title"),
+                              __html: t('hero.title'),
                             }}
                           />
-                        </h1>{" "}
+                        </h1>{' '}
                       </div>
                     </MotionDivDownToUp>
                     <MotionDivDownToUp>
                       <div className="flex justify-center w-full text-center desktop1:text-left desktop1:justify-start font-secondFont text-paragraph4 phone3:text-paragraph5">
                         <p className="text-white mb-[32px] ">
-                          {t("hero.subtitle")}{" "}
+                          {t('hero.subtitle')}{' '}
                         </p>
                       </div>
                     </MotionDivDownToUp>
                     <div className="w-full phone2:w-full tablet2:w-auto">
                       <div className="flex justify-center w-full desktop1:justify-start mb-[32px]">
                         <Button
-                          aria-label={t("hero.ctaButtonAriaLabel")}
-                          label={t("hero.ctaButtonText")}
+                          aria-label={t('hero.ctaButtonAriaLabel')}
+                          label={t('hero.ctaButtonText')}
                           animation
                           className="w-[100%]"
                           icon={
@@ -337,7 +390,7 @@ export default function Hero({
                           <div className="flex flex-col items-center desktop1:flex-row text-white">
                             {content.texts.hero.obsHero.icon}
                             <p className="text-white  ml-[10px] text-center mt-[12px] desktop1:mt-0">
-                              {t("hero.obsHero.text")}{" "}
+                              {t('hero.obsHero.text')}{' '}
                             </p>
                           </div>
                         </div>
@@ -350,7 +403,7 @@ export default function Hero({
                         className=" bg-top rounded-xl w-full h-[350px] tablet1:h-[380px] desktop1:h-[500px] desktop1:w-[500px] bg-cover bg-no-repeat tablet1:shadow-custom-opacity tablet1:shadow-shadowHero/10"
                         style={{
                           backgroundImage: `url(${content.texts.hero.heroDefaultImage})`,
-                          backgroundSize: "",
+                          backgroundSize: '',
                         }}
                       ></div>
                     </MotionDivDownToUp>
@@ -382,7 +435,7 @@ export default function Hero({
                         <MotionDivDownToUp>
                           <div className="flex justify-center w-auto text-center desktop1:justify-start desktop1:text-left font-secondFont text-paragraph4">
                             <p className="mb-[16px] bg-primary text-minititleDarkLabel bg-opacity-100 rounded-md px-[16px] py-[6px] inline-block text-paragraph2">
-                              {t("hero.miniTag")}
+                              {t('hero.miniTag')}
                             </p>
                           </div>
                         </MotionDivDownToUp>
@@ -391,24 +444,24 @@ export default function Hero({
                             <h1>
                               <span
                                 dangerouslySetInnerHTML={{
-                                  __html: t("hero.title"),
+                                  __html: t('hero.title'),
                                 }}
                               />
-                            </h1>{" "}
+                            </h1>{' '}
                           </div>
                         </MotionDivDownToUp>
                         <MotionDivDownToUp>
                           <div className="flex justify-center w-full text-center desktop1:text-left desktop1:justify-start font-secondFont text-paragraph4 phone3:text-paragraph5">
                             <p className="text-primary mb-[32px] ">
-                              {t("hero.subtitle")}{" "}
+                              {t('hero.subtitle')}{' '}
                             </p>
                           </div>
                         </MotionDivDownToUp>
                         <div className="w-full phone2:w-full tablet2:w-auto">
                           <div className="flex justify-center w-full desktop1:justify-start mb-[32px]">
                             <Button
-                              aria-label={t("hero.ctaButtonAriaLabel")}
-                              label={t("hero.ctaButtonText")}
+                              aria-label={t('hero.ctaButtonAriaLabel')}
+                              label={t('hero.ctaButtonText')}
                               animation
                               className="w-[100%]"
                               icon={
@@ -429,7 +482,7 @@ export default function Hero({
                               <div className="flex flex-col items-center desktop1:flex-row text-primary">
                                 {content.texts.hero.obsHero.icon}
                                 <p className="text-primary ml-[10px] text-center mt-[12px] desktop1:mt-0">
-                                  {t("hero.obsHero.text")}{" "}
+                                  {t('hero.obsHero.text')}{' '}
                                 </p>
                               </div>
                             </div>
@@ -445,5 +498,5 @@ export default function Hero({
         </div>
       )}
     </>
-  );
+  )
 }
