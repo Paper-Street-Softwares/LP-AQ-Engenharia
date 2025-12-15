@@ -71,11 +71,13 @@ export default function Hero({
 
         <MotionDivDownToUp>
           {' '}
-          <div className="flex gap-3 items-center justify-center mb-[32px] mt-2 w-full text-center desktop1:text-left desktop1:justify-start font-secondFont text-paragraph4 phone3:text-paragraph5">
-            <span>
-              <div className="bg-white/5 w-[2px] h-[50px]"></div>
-            </span>
-            <p className={`${subtitleTextColor} text-copy font-extralight`}>
+          <div className=" items-center justify-center mb-[32px] mt-2 w-full text-center desktop1:text-left desktop1:justify-start font-secondFont text-paragraph4 phone3:text-paragraph5">
+            <p
+              className={`${subtitleTextColor} gap-3 flex text-copy font-extralight justify-center desktop1:justify-start`}
+            >
+              <span>
+                <div className="bg-white/5 w-[2px] h-full"></div>
+              </span>
               {t('hero.subtitle')}
             </p>
           </div>
