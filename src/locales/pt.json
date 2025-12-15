@@ -18,7 +18,7 @@
   },
   "hero": {
     "miniTag": "ENGENHARIA E ARQUITETURA",
-    "title": "Construímos<span class=\"text-primary italic\"> mais do que,</span> <span class=\"\">espaços </span> ",
+    "title": "Construímos<span class=\"text-primary font-light italic\"> mais do que</span> <span class=\"\">espaços </span> ",
     "subtitle": "Projetos que unem técnica, design e propósito para transformar ideias em lugares que inspiram.",
     "ctaButtonText": "Quero meu projeto",
     "obsHero": {
@@ -138,7 +138,7 @@
     "description": "A_Definir"
   },
   "ctaSecondary": {
-    "title": "<span class=\" font-bold\">Pensando em construir,</span> reformar ou regularizar seu imóvel? <span class=\" font-bold\">Deixe que a gente cuida de tudo pra você!</span>",
+    "title": "<span class=\" font-bold text-bgSectionDark\">Pensando em construir,</span> reformar ou regularizar seu imóvel? <span class=\" font-bold text-bgSectionDark\">Deixe que a gente cuida de tudo pra você!</span>",
     "subtitleDireitaPartes": ["E N T R E", "E M", "C O N T A T O", "V I A"],
     "titleDireita": "WhatsApp",
     "ctaButtonText": "Entre em Contato"
