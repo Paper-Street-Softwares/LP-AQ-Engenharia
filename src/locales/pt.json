@@ -18,7 +18,7 @@
   },
   "hero": {
     "miniTag": "ENGENHARIA E ARQUITETURA",
-    "title": "Construímos<span class=\"text-primary font-light italic\"> mais do que</span> <span class=\"\">espaços </span> ",
+    "title": "<span class=\" font-medium\">Construímos</span><span class=\"text-primary font-light italic\"> mais do que</span> <span class=\"font-medium\">espaços </span> ",
     "subtitle": "Projetos que unem técnica, design e propósito para transformar ideias em lugares que inspiram.",
     "ctaButtonText": "Quero meu projeto",
     "obsHero": {
