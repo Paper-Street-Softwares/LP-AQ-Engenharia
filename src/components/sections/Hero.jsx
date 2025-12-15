@@ -33,7 +33,7 @@ export default function Hero({
   const backgroundClasses = {
     dark: 'bg-bgFixedDark',
     light: 'bg-bgFixedLight',
-    default: 'bg-bgSectionDark',
+    default: 'bg-backgroundHrero',
   }
   const bgGradient = backgroundClasses[colorMode] || backgroundClasses.default
 
@@ -51,7 +51,7 @@ export default function Hero({
               className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-[10px] font-semibold tracking-widest uppercase text-white/80 mb-8 w-fit backdrop-blur-sm${minititleColor}`}
             >
               <span>
-                <div className="bg-white/50 w-[7px] h-[7px] rounded-full"></div>
+                <div className="bg-copy w-[7px] h-[7px] rounded-full"></div>
               </span>
               {t('hero.miniTag')}
             </p>
@@ -75,7 +75,7 @@ export default function Hero({
             <span>
               <div className="bg-white/5 w-[2px] h-[50px]"></div>
             </span>
-            <p className={`${subtitleTextColor} text-white/50 font-extralight`}>
+            <p className={`${subtitleTextColor} text-copy font-extralight`}>
               {t('hero.subtitle')}
             </p>
           </div>
@@ -106,12 +106,12 @@ export default function Hero({
             <div className="flex justify-center desktop1:justify-start">
               <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
                 <div className="flex gap-4">
-                  <span className=" p-2 rounded-full border border-white/10">
+                  <span className=" p-2 rounded-full border border-copy/50">
                     {content.texts.hero.obsHero.icon}
                   </span>
                 </div>
                 <div className="h-px w-12 bg-white/10" />
-                <p className="text-xs text-white/40 max-w-[250px] font-extralight">
+                <p className="text-xs text-copy max-w-[250px] font-extralight">
                   {t('hero.obsHero.text')}{' '}
                 </p>
               </div>
@@ -222,21 +222,25 @@ export default function Hero({
                         <h3 className="text-white text-paragraph2 flex justify-center phone2:justify-start phone2:text-paragraph4 font-bold text-lg mb-2 font-mainFont">
                           Alves e Queiroz
                         </h3>
-                        <div className="flex flex-col gap-2">
-                          <div className="flex flex-col phone2:flex-row gap-1 phone2:gap-0 justify-between items-center text-xs text-white/60 border-b border-white/10 pb-1">
+                        <div className="grid phone2:grid-cols-2 gap-2">
+                          <div className="flex flex-col phone2:flex-row gap-1 max-w-[120px] phone2:gap-0 justify-between items-center text-xs text-white/60 border-b border-white/10 pb-1">
                             <span className="text-paragraph2">
                               Izabela Alves
                             </span>
-                            <span className="font-secondFont text-paragraph1 text-white/40">
-                              CREA 50068
+                          </div>
+                          <div className="flex flex-col phone2:flex-row gap-1 max-w-[120px] phone2:gap-0 justify-between items-center text-xs text-white/60 border-b border-white/10 pb-1">
+                            <span className="text-paragraph2">
+                              Vinícius Queiroz{' '}
                             </span>
                           </div>
-                          <div className="flex flex-col phone2:flex-row gap-1 phone2:gap-0 justify-between items-center text-xs text-white/60 border-b border-white/10 pb-1">
+                          <div className="flex flex-col phone2:flex-row gap-1 max-w-[120px] phone2:gap-0 justify-between items-center text-xs text-white/60 border-b border-white/10 pb-1">
                             <span className="text-paragraph2">
                               Grazielle Siqueira
                             </span>
-                            <span className="font-secondFont text-paragraph1 text-white/40">
-                              CREA 57140
+                          </div>
+                          <div className="flex flex-col phone2:flex-row gap-1 max-w-[120px] phone2:gap-0 justify-between items-center text-xs text-white/60 border-b border-white/10 pb-1">
+                            <span className="text-paragraph2">
+                              Geovana de Zanet
                             </span>
                           </div>
                         </div>
