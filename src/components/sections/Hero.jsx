@@ -214,24 +214,28 @@ export default function Hero({
                     </picture>
                     <div className="absolute bottom-[-20px] left-[-20px] w-[100px] h-[100px] border-b-2 border-l-2 border-white/20 rounded-bl-2xl" />
                     <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
-                      <div className="bg-[#242833] p-6 rounded-tr-2xl max-w-[280px] shadow-lg border-t border-r border-white/5 relative">
+                      <div className="bg-[#242833] p-3 rounded-tr-2xl w-[150px] phone2:w-full max-w-[280px] shadow-lg border-t border-r border-white/5 relative">
                         {/* Corner accent */}
                         <div className="absolute -top-4 left-0 w-4 h-4 bg-transparent shadow-[-5px_5px_0_0_#242833] rounded-bl-full" />
                         <div className="absolute bottom-0 -right-4 w-4 h-4 bg-transparent shadow-[-5px_5px_0_0_#242833] rounded-bl-full" />
 
-                        <h3 className="text-white font-bold text-lg mb-2 font-mainFont">
+                        <h3 className="text-white text-paragraph2 flex justify-center phone2:justify-start phone2:text-paragraph4 font-bold text-lg mb-2 font-mainFont">
                           Alves e Queiroz
                         </h3>
                         <div className="flex flex-col gap-2">
                           <div className="flex flex-col phone2:flex-row gap-1 phone2:gap-0 justify-between items-center text-xs text-white/60 border-b border-white/10 pb-1">
-                            <span>Izabela Alves</span>
-                            <span className="font-secondFont text-white/40">
+                            <span className="text-paragraph2">
+                              Izabela Alves
+                            </span>
+                            <span className="font-secondFont text-paragraph1 text-white/40">
                               CREA 50068
                             </span>
                           </div>
                           <div className="flex flex-col phone2:flex-row gap-1 phone2:gap-0 justify-between items-center text-xs text-white/60 border-b border-white/10 pb-1">
-                            <span>Grazielle Siqueira</span>
-                            <span className="font-secondFont text-white/40">
+                            <span className="text-paragraph2">
+                              Grazielle Siqueira
+                            </span>
+                            <span className="font-secondFont text-paragraph1 text-white/40">
                               CREA 57140
                             </span>
                           </div>
