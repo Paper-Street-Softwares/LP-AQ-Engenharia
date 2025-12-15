@@ -4,8 +4,8 @@ import content from '../../../content/content'
 function SocialPrint() {
   return (
     <MotionDivDownToUp className="relative w-[90%] desktop1:w-[415px] desktop2:w-[485px] flex justify-center">
-      <div className="absolute bottom-[-20px] left-[-20px] w-[100px] h-[100px] border-b-2 border-l-2 border-white/20 rounded-bl-2xl" />
-      <div className="absolute top-[-20px] right-[-20px] w-[100px] h-[100px] border-t-2 border-r-2 border-white/20 rounded-tr-2xl" />
+      <div className="absolute bottom-[-20px] left-[-20px] w-[100px] h-[100px] border-b-2 border-l-2 border-white/20 rounded-bl-3xl" />
+      <div className="absolute top-[-20px] right-[-20px] w-[100px] h-[100px] border-t-2 border-r-2 border-white/20 rounded-tr-3xl" />
       <picture>
         <source
           srcSet={content.texts.about.aboutSocial.img.imgMobile}
