@@ -543,12 +543,12 @@ const content = {
         </h1>
       ),
       subtitleDireita: (
-        <p className="gap-3 flex font-mainFont opacity-60 mt-1">
+        <p className="flex gap-3 mt-1 font-mainFont opacity-60">
           <span>E N T R E </span> E M <span>C O N T A T O</span> V I A
         </p>
       ),
       titleDireita: (
-        <h1 className="text-title5 my-3 font-mainFont">WhatsApp</h1>
+        <h1 className="my-3 text-title5 font-mainFont">WhatsApp</h1>
       ),
       ctaButtonText: "Falar agora",
     },
@@ -694,7 +694,7 @@ const content = {
         member1: {
           img: {
             img: teamMemberImg1,
-            alt: "A_Definir",
+            alt: "Imagem de membro do time",
           },
           name: "A_Definir",
           role: "A_Definir",
@@ -760,7 +760,7 @@ const content = {
         member2: {
           img: {
             img: teamMemberImg2,
-            alt: "A_Definir",
+            alt: "Imagem de membro do time",
           },
           name: "A_Definir",
           role: "A_Definir",
@@ -826,7 +826,7 @@ const content = {
         member3: {
           img: {
             img: teamMemberImg3,
-            alt: "A_Definir",
+            alt: "Imagem de membro do time",
           },
           name: "A_Definir",
           role: "A_Definir",
@@ -892,7 +892,7 @@ const content = {
         member4: {
           img: {
             img: teamMemberImg4,
-            alt: "A_Definir",
+            alt: "Imagem de membro do time",
           },
           name: "A_Definir",
           role: "A_Definir",
