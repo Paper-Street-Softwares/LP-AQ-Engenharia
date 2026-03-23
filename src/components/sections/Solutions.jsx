@@ -40,7 +40,7 @@ export default function SolucoesRapidas() {
                   href={service.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-between gap-4 bg-white border border-slate-200 rounded-xl px-6 py-5 shadow-sm desktop1:hover:scale-110 duration-500 transition-all max-w-[360px]"
+                  className="group flex items-center justify-between gap-4 bg-white border border-slate-200 font-secondFont rounded-md px-6 py-5 shadow-sm desktop1:hover:scale-110 duration-500 transition-all max-w-[360px]"
                 >
                   <div className="flex items-center gap-4">
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary border border-primary flex items-center justify-center text-white600 font-bold text-sm text-white">
