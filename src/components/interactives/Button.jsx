@@ -63,7 +63,9 @@ export default function Button({
             className={`flex ${className} ${sizeFeatures} shadow-custom-opacityButton shadow-shadowHero/0 ${
               color || "bg-buttonColor"
             } flex-row items-center justify-around transition text-labelButtons ${
-              noScale ? "" : "desktop1:hover:scale-110"
+              noScale
+                ? ""
+                : "desktop1:hover:scale-110 duration-500 transition-all"
             }`}
           >
             <div

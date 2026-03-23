@@ -19,6 +19,7 @@ import { useColorMode } from "../assets/context/ColorModeContext";
 import News from "../components/sections/News";
 import Testimonial from "../components/sections/lp01/Testimonials";
 import Team from "../components/sections/Team";
+import SolucoesRapidas from "../components/sections/Solutions";
 
 export default function Index() {
   const showUnderConstruction = false;
@@ -64,6 +65,7 @@ export default function Index() {
         influencer={false}
         panoramica={false}
       />
+      <SolucoesRapidas />
       <Features
         colorMode={colorMode}
         defaultFeature={true}

@@ -1,0 +1,3828 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diagnóstico de Projeto — Alves e Queiroz</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*
+══════════════════════════════════════════════════════════════
+  ALVES E QUEIROZ — DIAGNÓSTICO DE PROJETO
+  Versão: Residencial + Comercial
+══════════════════════════════════════════════════════════════
+
+  FLUXO RESIDENCIAL (🟢→🟡→🔴)
+  ─────────────────────────────
+  Q1  → Tipo de projeto (residencial / comercial)
+  Q2  → Objetivo residencial
+        (moradia / venda / aluguel / multiplicação / patrimônio)
+  Q2B → Captura: nome + whats + estado + cidade → CRM partial
+  Q3  → Terreno: situação
+  Q3B → Terreno: tamanho (texto + faixas) — se tem terreno
+  Q4  → Tipo de construção (térrea / sobrado / 3+ / não sei)
+  Q5  → Área construída (texto + faixas)
+  Q6  → Quartos + suítes + garagem + telhado + extras + DESCRIÇÃO*
+  Q7  → Fase atual
+  Q8  → Financiamento (+ banco se sim)
+  Q9  → Projetos complementares (multi-select)
+  Q10 → Projeto de interiores
+  Q11 → Outros serviços (INSS, acompanhamento, regularização)
+  Q12 → Prazo (mês + ano)
+  Q13 → Intenção de contato
+  Q14 → Dados completos + submit
+
+  FLUXO COMERCIAL (🟢→🟡→🔴)
+  ─────────────────────────────
+  Q1  → Tipo de projeto
+  QC2 → Objetivo comercial (uso próprio / aluguel / venda / expansão)
+  Q2B → Captura antecipada → CRM partial
+  QC3 → Tipo de uso (loja / clínica / escritório / galpão / outro)
+  QC4 → Área estimada (texto + faixas)
+  QC5 → Pavimentos (1 / 2 / 3+ / não sei)
+  QC6 → Características especiais (multi-select)
+  QC7 → Descrição do projeto* (obrigatória)
+  Q7  → Fase atual (compartilhado)
+  Q8  → Financiamento (compartilhado)
+  Q9  → Projetos complementares (compartilhado)
+  Q11 → Outros serviços (compartilhado)
+  Q12 → Prazo (compartilhado)
+  Q13 → Intenção de contato (compartilhado)
+  Q14 → Dados completos + submit (compartilhado)
+
+  * Descrição: campo de texto obrigatório com tooltip de exemplo
+══════════════════════════════════════════════════════════════
+*/
+
+      /* ── TOKENS ── */
+      :root {
+        --dark: #1c2b3a;
+        --darker: #111d28;
+        --accent: #c9a84c;
+        --accent2: #e8c96a;
+        --light: #f4f1ec;
+        --muted: #8a9baa;
+        --white: #ffffff;
+        --surface: #233244;
+        --border: rgba(201, 168, 76, 0.2);
+        --radius: 4px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--darker);
+        color: var(--light);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      }
+
+      .page-wrap {
+        position: relative;
+        z-index: 1;
+        max-width: 660px;
+        margin: 0 auto;
+        padding: 0 24px 80px;
+      }
+
+      /* ── HEADER ── */
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 26px 0 22px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 52px;
+      }
+      .logo-mark {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        letter-spacing: 0.18em;
+        color: var(--accent);
+        text-transform: uppercase;
+        font-weight: 400;
+      }
+      .logo-mark span {
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      /* ── HERO ── */
+      .hero {
+        margin-bottom: 44px;
+      }
+      .hero-eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .hero-eyebrow::before {
+        content: "";
+        display: block;
+        width: 24px;
+        height: 1px;
+        background: var(--accent);
+      }
+      .hero-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(32px, 5.5vw, 48px);
+        font-weight: 300;
+        line-height: 1.12;
+        color: var(--white);
+        margin-bottom: 16px;
+      }
+      .hero-title em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .hero-sub {
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--muted);
+        max-width: 480px;
+        font-weight: 300;
+      }
+
+      /* ── DOIS CAMINHOS ── */
+      .paths {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 44px;
+      }
+      @media (max-width: 500px) {
+        .paths {
+          grid-template-columns: 1fr;
+        }
+      }
+      .path-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 24px 20px;
+        cursor: pointer;
+        transition: all 0.18s;
+        position: relative;
+        overflow: hidden;
+      }
+      .path-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.28s;
+      }
+      .path-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+      .path-card:hover::after {
+        transform: scaleX(1);
+      }
+      .path-icon {
+        font-size: 20px;
+        margin-bottom: 11px;
+      }
+      .path-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--white);
+        margin-bottom: 6px;
+      }
+      .path-desc {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      /* ── FORM ── */
+      .form-section {
+        display: none;
+      }
+      .form-section.visible {
+        display: block;
+      }
+
+      /* ── PROGRESS ── */
+      .prog-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 40px;
+      }
+      .prog-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .prog-layer {
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        opacity: 0.75;
+      }
+      .prog-counter {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .prog-bar {
+        height: 2px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .prog-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 2px;
+        transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* ── TELAS ── */
+      .q-screen {
+        display: none;
+      }
+      .q-screen.active {
+        display: block;
+        animation: fadeUp 0.3s ease;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .q-eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 8px;
+        opacity: 0.7;
+      }
+      .q-label {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(20px, 3.8vw, 28px);
+        font-weight: 400;
+        line-height: 1.25;
+        color: var(--white);
+        margin-bottom: 6px;
+      }
+      .q-hint {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.6;
+        margin-bottom: 26px;
+        max-width: 460px;
+      }
+
+      /* ── OPÇÕES ── */
+      .opts {
+        display: grid;
+        gap: 9px;
+        margin-bottom: 22px;
+      }
+      .opts.c2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .opts.c3 {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .opts.c4 {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+      @media (max-width: 500px) {
+        .opts.c2,
+        .opts.c3 {
+          grid-template-columns: 1fr 1fr;
+        }
+        .opts.c4 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 340px) {
+        .opts.c2,
+        .opts.c3,
+        .opts.c4 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .opc {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 13px 15px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: all 0.13s;
+        user-select: none;
+      }
+      .opc:hover {
+        border-color: rgba(201, 168, 76, 0.45);
+        background: rgba(201, 168, 76, 0.05);
+      }
+      .opc.sel {
+        border-color: var(--accent);
+        background: rgba(201, 168, 76, 0.09);
+      }
+      .opc.sm {
+        padding: 9px 12px;
+      }
+
+      /* Radio */
+      .r {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        border: 1.5px solid rgba(255, 255, 255, 0.22);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.13s;
+      }
+      .opc.sel .r {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .opc.sel .r::after {
+        content: "";
+        display: block;
+        width: 5px;
+        height: 5px;
+        background: var(--darker);
+        border-radius: 50%;
+      }
+
+      /* Checkbox */
+      .cb {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        margin-top: 2px;
+        border: 1.5px solid rgba(255, 255, 255, 0.22);
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.13s;
+      }
+      .opc.sel .cb {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .opc.sel .cb::after {
+        content: "✓";
+        font-size: 9px;
+        color: var(--darker);
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .ot {
+        flex: 1;
+      }
+      .om {
+        font-size: 13px;
+        color: var(--light);
+        line-height: 1.4;
+      }
+      .os {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+        line-height: 1.4;
+      }
+
+      /* ── CAMPOS ── */
+      .qf {
+        margin-bottom: 16px;
+      }
+      .qf label {
+        display: block;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 7px;
+      }
+      .qf input,
+      .qf textarea,
+      .qf select {
+        width: 100%;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius);
+        color: var(--white);
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.18s;
+      }
+      .qf input:focus,
+      .qf textarea:focus,
+      .qf select:focus {
+        border-color: var(--accent);
+        background: rgba(201, 168, 76, 0.04);
+      }
+      .qf input::placeholder,
+      .qf textarea::placeholder {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .qf textarea {
+        resize: vertical;
+        min-height: 100px;
+        line-height: 1.6;
+      }
+      .qf select {
+        appearance: none;
+        cursor: pointer;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 13px center;
+        padding-right: 34px;
+      }
+      .qf select option {
+        background: #1a2633;
+        color: var(--light);
+      }
+      .frow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 13px;
+      }
+      @media (max-width: 460px) {
+        .frow {
+          grid-template-columns: 1fr;
+        }
+      }
+      .fnote {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 4px;
+        font-style: italic;
+      }
+
+      /* ── CAPTURA ANTECIPADA ── */
+      .early-box {
+        background: rgba(201, 168, 76, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 18px 20px;
+        margin-bottom: 20px;
+      }
+      .early-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 16px;
+        color: var(--white);
+        margin-bottom: 3px;
+      }
+      .early-hint {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
+
+      /* ── INFO BOX ── */
+      .ibox {
+        background: rgba(201, 168, 76, 0.06);
+        border-left: 3px solid var(--accent);
+        border-radius: 0 var(--radius) var(--radius) 0;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.65;
+        text-align: justify;
+      }
+      .ibox strong {
+        color: var(--accent);
+      }
+
+      /* ── CONDICIONAL ── */
+      .cond {
+        display: none;
+      }
+      .cond.show {
+        display: block;
+        animation: fadeUp 0.22s ease;
+      }
+
+      /* ── DIVISOR ── */
+      .divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+        margin: 18px 0;
+      }
+
+      /* ── SUBLABEL ── */
+      .slbl {
+        margin-bottom: 7px;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* ── BOTÕES ── */
+      .nav {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 20px;
+      }
+      .btn-p {
+        flex: 1;
+        padding: 13px 22px;
+        background: var(--accent);
+        color: var(--darker);
+        border: none;
+        border-radius: var(--radius);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: all 0.17s;
+      }
+      .btn-p:hover {
+        background: var(--accent2);
+        transform: translateY(-1px);
+      }
+      .btn-g {
+        padding: 13px 16px;
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.17s;
+      }
+      .btn-g:hover {
+        color: var(--light);
+        border-color: rgba(255, 255, 255, 0.22);
+      }
+
+      /* ── INTENÇÃO ── */
+      .int-grid {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .int-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 15px 18px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: all 0.13s;
+        user-select: none;
+      }
+      .int-card:hover {
+        border-color: rgba(201, 168, 76, 0.45);
+        background: rgba(201, 168, 76, 0.05);
+      }
+      .int-card.sel {
+        border-color: var(--accent);
+        background: rgba(201, 168, 76, 0.09);
+      }
+      .int-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .int-main {
+        font-size: 13px;
+        color: var(--light);
+        font-weight: 500;
+      }
+      .int-sub {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      /* ── QUICK ── */
+      .quick-intro {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.7;
+        margin-bottom: 24px;
+      }
+
+      /* ── SUCESSO ── */
+      .success-screen {
+        text-align: center;
+        padding: 60px 0;
+        display: none;
+      }
+      .success-screen.visible {
+        display: block;
+        animation: fadeUp 0.45s ease;
+      }
+      .s-icon {
+        width: 58px;
+        height: 58px;
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        font-size: 20px;
+      }
+      .s-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 32px;
+        font-weight: 400;
+        color: var(--white);
+        margin-bottom: 13px;
+      }
+      .s-text {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 400px;
+        margin: 0 auto 26px;
+      }
+      .s-badge {
+        display: inline-block;
+        background: rgba(201, 168, 76, 0.08);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 10px 16px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .s-badge:empty {
+        display: none;
+      }
+      .s-badge strong {
+        color: var(--accent);
+      }
+
+      /* ── TOOLTIP DESCRIÇÃO ── */
+      .desc-help-box {
+        display: none;
+        background: rgba(201, 168, 76, 0.07);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .desc-help-box strong {
+        color: var(--accent);
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      /* ── FOOTER ── */
+      .site-footer {
+        margin-top: 72px;
+        padding-top: 28px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .footer-brand {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .footer-contact {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* ── SHAKE ── */
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-5px);
+        }
+        40% {
+          transform: translateX(5px);
+        }
+        60% {
+          transform: translateX(-3px);
+        }
+        80% {
+          transform: translateX(3px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <!-- HEADER -->
+      <header class="site-header">
+        <div class="logo-mark">
+          Alves e Queiroz <span>· Engenharia | Arquitetura</span>
+        </div>
+        <div style="font-size: 11px; color: var(--muted)">
+          Alta Floresta — MT
+        </div>
+      </header>
+
+      <!-- HERO -->
+      <div class="hero" id="hero-section">
+        <div class="hero-eyebrow">Diagnóstico de Projeto</div>
+        <h1 class="hero-title">
+          Antes de contratar,<br /><em
+            >entenda o que<br />seu projeto precisa.</em
+          >
+        </h1>
+        <p class="hero-sub">
+          Responda algumas perguntas e nossa equipe chega para a conversa já
+          preparada. Sem custo, sem compromisso.
+        </p>
+      </div>
+
+      <!-- DOIS CAMINHOS -->
+      <div class="paths" id="path-chooser">
+        <div class="path-card" onclick="choosePath('full')">
+          <div class="path-icon">🧭</div>
+          <div class="path-title">Diagnóstico Guiado</div>
+          <p class="path-desc">
+            Ainda estou planejando ou tenho dúvidas. Quero orientação completa.
+          </p>
+        </div>
+        <div class="path-card" onclick="choosePath('quick')">
+          <div class="path-icon">⚡</div>
+          <div class="path-title">Já sei o que preciso</div>
+          <p class="path-desc">
+            Tenho o projeto em mente. Quero falar direto com a equipe.
+          </p>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════
+     FORMULÁRIO GUIADO
+════════════════════════════════════════════════════════ -->
+      <div class="form-section" id="full-form">
+        <div class="prog-wrap">
+          <div class="prog-top">
+            <span class="prog-layer" id="prog-layer">🟢 Entrada</span>
+            <span class="prog-counter" id="prog-counter">1 / —</span>
+          </div>
+          <div class="prog-bar">
+            <div class="prog-fill" id="prog-fill" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q1 — TIPO DE PROJETO
+       🟢 Camada 1 | Apenas Residencial e Comercial
+  ══════════════════════════════════════════ -->
+        <div class="q-screen active" id="q1">
+          <div class="q-eyebrow">🟢 Vamos começar</div>
+          <h2 class="q-label">Qual é o tipo do seu projeto?</h2>
+          <p class="q-hint">
+            Tipo e objetivo são perguntas separadas — responda só o que será
+            construído.
+          </p>
+          <div class="opts" id="grp-q1">
+            <div
+              class="opc"
+              data-val="residencial"
+              onclick="pick(this, 'grp-q1', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Residencial</div>
+                <div class="os">Casa unifamiliar, sobrado ou residência</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="comercial"
+              onclick="pick(this, 'grp-q1', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Comercial</div>
+                <div class="os">
+                  Loja, clínica, escritório, galpão, restaurante
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="backToChooser()">← Início</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q2 — OBJETIVO RESIDENCIAL
+       🟢 Camada 1 | Auto-avança
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q2-res">
+          <div class="q-eyebrow">🟢 Objetivo</div>
+          <h2 class="q-label">Qual é o seu objetivo com essa construção?</h2>
+          <p class="q-hint">
+            O mesmo tipo de projeto pode ter finalidades muito diferentes.
+          </p>
+          <div class="opts" id="grp-q2-res">
+            <div
+              class="opc"
+              data-val="moradia-propria"
+              onclick="pick(this, 'grp-q2-res', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Moradia própria</div>
+                <div class="os">Para eu e minha família morarmos</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="venda"
+              onclick="pick(this, 'grp-q2-res', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Venda após construção</div>
+                <div class="os">Construir para vender</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="aluguel"
+              onclick="pick(this, 'grp-q2-res', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Geração de renda</div>
+                <div class="os">Alugar e ter retorno financeiro</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="patrimonio"
+              onclick="pick(this, 'grp-q2-res', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Formação de patrimônio</div>
+                <div class="os">Usar agora, vender ou alugar depois</div>
+              </div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q1')">← Voltar</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       QC2 — OBJETIVO COMERCIAL
+       🟢 Camada 1 | Auto-avança
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="qc2">
+          <div class="q-eyebrow">🟢 Objetivo</div>
+          <h2 class="q-label">Qual é o objetivo desse projeto comercial?</h2>
+          <div class="opts" id="grp-qc2">
+            <div
+              class="opc"
+              data-val="uso-proprio"
+              onclick="pick(this, 'grp-qc2', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Uso próprio</div>
+                <div class="os">Instalar meu negócio no imóvel</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="aluguel-com"
+              onclick="pick(this, 'grp-qc2', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Alugar para terceiros</div>
+                <div class="os">Construir para gerar renda com locação</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="venda-com"
+              onclick="pick(this, 'grp-qc2', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Vender após construir</div></div>
+            </div>
+            <div
+              class="opc"
+              data-val="expansao"
+              onclick="pick(this, 'grp-qc2', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Expandir negócio atual</div>
+                <div class="os">
+                  Ampliar ou criar nova unidade do meu negócio
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q1')">← Voltar</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q2B — CAPTURA ANTECIPADA + LOCALIZAÇÃO
+       🟢 Camada 1 | Botão continuar
+       → envia lead_partial ao CRM aqui
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q2b">
+          <div class="q-eyebrow">🟢 Identificação</div>
+          <h2 class="q-label">Para personalizar seu diagnóstico</h2>
+          <p class="q-hint">
+            Só usamos isso para entrar em contato com você sobre o projeto.
+          </p>
+
+          <div class="early-box">
+            <div class="early-title">Dados de contato</div>
+            <div class="early-hint">
+              Capturamos aqui — se você sair depois, ainda conseguimos entrar em
+              contato.
+            </div>
+            <div class="frow">
+              <div class="qf" style="margin-bottom: 0">
+                <label>Nome *</label
+                ><input type="text" id="q_nome_early" placeholder="Seu nome" />
+              </div>
+              <div class="qf" style="margin-bottom: 0">
+                <label>WhatsApp *</label
+                ><input
+                  type="tel"
+                  id="q_whats_early"
+                  placeholder="(66) 99999-9999"
+                  oninput="maskPhone(this)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="frow">
+            <div class="qf" style="margin-bottom: 0">
+              <label>Estado *</label>
+              <select id="q_estado" onchange="updateCidades(this.value)">
+                <option value="">Selecione...</option>
+                <option>Acre</option>
+                <option>Alagoas</option>
+                <option>Amapá</option>
+                <option>Amazonas</option>
+                <option>Bahia</option>
+                <option>Ceará</option>
+                <option>Distrito Federal</option>
+                <option>Espírito Santo</option>
+                <option>Goiás</option>
+                <option>Maranhão</option>
+                <option>Mato Grosso</option>
+                <option>Mato Grosso do Sul</option>
+                <option>Minas Gerais</option>
+                <option>Pará</option>
+                <option>Paraíba</option>
+                <option>Paraná</option>
+                <option>Pernambuco</option>
+                <option>Piauí</option>
+                <option>Rio de Janeiro</option>
+                <option>Rio Grande do Norte</option>
+                <option>Rio Grande do Sul</option>
+                <option>Rondônia</option>
+                <option>Roraima</option>
+                <option>Santa Catarina</option>
+                <option>São Paulo</option>
+                <option>Sergipe</option>
+                <option>Tocantins</option>
+              </select>
+            </div>
+            <div class="qf" style="margin-bottom: 0">
+              <label>Cidade *</label>
+              <select id="q_cidade_sel" disabled>
+                <option value="">Selecione o estado...</option>
+              </select>
+            </div>
+          </div>
+          <div class="cond" id="outra-cidade-blk" style="margin-top: 11px">
+            <div class="qf" style="margin-bottom: 0">
+              <label>Nome da cidade *</label
+              ><input
+                type="text"
+                id="q_cidade_outro"
+                placeholder="Digite o nome da cidade..."
+              />
+            </div>
+          </div>
+
+          <div class="nav" style="margin-top: 18px">
+            <button class="btn-g" onclick="step_q2b_back()">← Voltar</button>
+            <button class="btn-p" onclick="step_q2b_next()">Continuar →</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q3 — TERRENO (situação) — RESIDENCIAL
+       🟢 Camada 1 | Auto-avança
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q3">
+          <div class="q-eyebrow">🟢 Terreno</div>
+          <h2 class="q-label">Você já tem o terreno?</h2>
+          <div class="opts" id="grp-q3">
+            <div
+              class="opc"
+              data-val="sim-regular"
+              onclick="pick(this, 'grp-q3', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Sim — está no meu nome e regular</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="sim-pendencias"
+              onclick="pick(this, 'grp-q3', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Sim — mas tem pendências documentais</div>
+                <div class="os">
+                  Não transferido, inventário, irregular etc.
+                </div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="procurando"
+              onclick="pick(this, 'grp-q3', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Ainda estou procurando</div></div>
+            </div>
+            <div
+              class="opc"
+              data-val="sem-terreno"
+              onclick="pick(this, 'grp-q3', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Não tenho terreno</div></div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q2b')">← Voltar</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q3B — TAMANHO DO TERRENO — RESIDENCIAL
+       🟢 Camada 1 | Campo texto + faixas | Botão
+       Condicional: aparece se tem terreno (sim)
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q3b">
+          <div class="q-eyebrow">🟢 Terreno</div>
+          <h2 class="q-label">Qual o tamanho do terreno?</h2>
+          <p class="q-hint">
+            Digite o valor em m² se souber. Pode selecionar uma faixa ou avançar
+            sem preencher.
+          </p>
+          <div class="qf" style="margin-bottom: 14px">
+            <label>Área do terreno (m²)</label>
+            <input
+              type="text"
+              id="q_terreno_txt"
+              placeholder="Ex: 300, 450, 720..."
+              oninput="syncTerrenoTam()"
+            />
+          </div>
+          <div class="slbl">Ou selecione uma faixa aproximada</div>
+          <div class="opts c2" id="grp-q3b" style="margin-bottom: 20px">
+            <div
+              class="opc sm"
+              data-val="ate250"
+              onclick="pickTam('grp-q3b', 'q_terreno_txt', this, 'ate250')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Até 250 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="250-360"
+              onclick="pickTam('grp-q3b', 'q_terreno_txt', this, '250-360')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">250 – 360 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="360-500"
+              onclick="pickTam('grp-q3b', 'q_terreno_txt', this, '360-500')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">360 – 500 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="500+"
+              onclick="pickTam('grp-q3b', 'q_terreno_txt', this, '500+')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Acima de 500 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="nao-sei"
+              onclick="pickTam('grp-q3b', 'q_terreno_txt', this, 'nao-sei')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Não sei</div></div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q3')">← Voltar</button>
+            <button class="btn-p" onclick="goTo('q4')">Continuar →</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q4 — TIPO DE CONSTRUÇÃO — RESIDENCIAL
+       🟡 Camada 2 | Auto-avança
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q4">
+          <div class="q-eyebrow">🟡 Detalhamento</div>
+          <h2 class="q-label">Como você imagina a construção?</h2>
+          <div class="opts c2" id="grp-q4">
+            <div
+              class="opc"
+              data-val="terrea"
+              onclick="pick(this, 'grp-q4', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Térrea</div>
+                <div class="os">1 pavimento</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="sobrado"
+              onclick="pick(this, 'grp-q4', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Sobrado</div>
+                <div class="os">2 pavimentos</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="3-pav"
+              onclick="pick(this, 'grp-q4', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">3 ou mais pavimentos</div></div>
+            </div>
+            <div
+              class="opc"
+              data-val="nao-sei"
+              onclick="pick(this, 'grp-q4', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Ainda não sei</div></div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="step_q4_back()">← Voltar</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q5 — ÁREA CONSTRUÍDA — RESIDENCIAL
+       🟡 Camada 2 | Campo texto + faixas | Botão
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q5">
+          <div class="q-eyebrow">🟡 Detalhamento</div>
+          <h2 class="q-label">Qual a área que você tem em mente?</h2>
+          <p class="q-hint">
+            Digite em m² se souber. Pode selecionar uma faixa ou avançar sem
+            preencher.
+          </p>
+          <div class="qf" style="margin-bottom: 14px">
+            <label>Área construída (m²)</label>
+            <input
+              type="text"
+              id="q_area_txt"
+              placeholder="Ex: 120, 180, 250..."
+              oninput="syncAreaTxt()"
+            />
+          </div>
+          <div class="slbl">Ou selecione uma faixa aproximada</div>
+          <div class="opts c2" id="grp-q5" style="margin-bottom: 20px">
+            <div
+              class="opc sm"
+              data-val="ate80"
+              onclick="pickTam('grp-q5', 'q_area_txt', this, 'ate80')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Até 80 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="80-150"
+              onclick="pickTam('grp-q5', 'q_area_txt', this, '80-150')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">80 – 150 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="150-250"
+              onclick="pickTam('grp-q5', 'q_area_txt', this, '150-250')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">150 – 250 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="250+"
+              onclick="pickTam('grp-q5', 'q_area_txt', this, '250+')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Acima de 250 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="nao-sei"
+              onclick="pickTam('grp-q5', 'q_area_txt', this, 'nao-sei')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Ainda não sei</div></div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q4')">← Voltar</button>
+            <button class="btn-p" onclick="goTo('q6')">Continuar →</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q6 — CONFIGURAÇÃO + DESCRIÇÃO — RESIDENCIAL
+       🟡 Camada 2 | Botão | Descrição obrigatória
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q6">
+          <div class="q-eyebrow">🟡 Detalhamento</div>
+          <h2 class="q-label">Configuração e ambientes</h2>
+
+          <div class="slbl">Quartos</div>
+          <div class="opts c4" id="grp-q6-qtos" style="margin-bottom: 16px">
+            <div
+              class="opc sm"
+              data-val="1"
+              onclick="pick(this, 'grp-q6-qtos', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">1</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="2"
+              onclick="pick(this, 'grp-q6-qtos', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">2</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="3"
+              onclick="pick(this, 'grp-q6-qtos', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">3</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="4+"
+              onclick="pick(this, 'grp-q6-qtos', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">4+</div></div>
+            </div>
+          </div>
+
+          <div class="slbl">Suítes</div>
+          <div class="opts c4" id="grp-q6-suits" style="margin-bottom: 16px">
+            <div
+              class="opc sm"
+              data-val="0"
+              onclick="pick(this, 'grp-q6-suits', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Nenhuma</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="1"
+              onclick="pick(this, 'grp-q6-suits', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">1</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="2"
+              onclick="pick(this, 'grp-q6-suits', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">2</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="3+"
+              onclick="pick(this, 'grp-q6-suits', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">3+</div></div>
+            </div>
+          </div>
+
+          <div class="slbl">Garagem</div>
+          <div class="opts c4" id="grp-q6-gar" style="margin-bottom: 16px">
+            <div
+              class="opc sm"
+              data-val="sem"
+              onclick="pick(this, 'grp-q6-gar', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Sem</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="1"
+              onclick="pick(this, 'grp-q6-gar', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">1 vaga</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="2"
+              onclick="pick(this, 'grp-q6-gar', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">2 vagas</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="3+"
+              onclick="pick(this, 'grp-q6-gar', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">3+</div></div>
+            </div>
+          </div>
+
+          <div class="slbl">Telhado</div>
+          <div class="opts c2" id="grp-q6-tel" style="margin-bottom: 16px">
+            <div
+              class="opc sm"
+              data-val="embutido"
+              onclick="pick(this, 'grp-q6-tel', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Telhado embutido</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="aparente"
+              onclick="pick(this, 'grp-q6-tel', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Telhado aparente</div></div>
+            </div>
+          </div>
+
+          <div class="slbl">
+            Extras
+            <span
+              style="
+                text-transform: none;
+                letter-spacing: 0;
+                font-size: 10px;
+                font-style: italic;
+              "
+              >(selecione os que se aplicam)</span
+            >
+          </div>
+          <div class="opts c2" id="grp-q6-ext" style="margin-bottom: 20px">
+            <div
+              class="opc sm"
+              data-val="piscina"
+              onclick="multi(this, 'grp-q6-ext')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Piscina</div>
+                <div class="os">Agora ou com previsão futura</div>
+              </div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="ampliacao"
+              onclick="multi(this, 'grp-q6-ext')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Previsão de ampliação</div>
+                <div class="os">Estrutura preparada para crescer</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Descrição — OBRIGATÓRIA -->
+          <div class="qf">
+            <label>
+              Descreva o projeto que você idealiza *
+              <span
+                onclick="toggleDescHelp('res')"
+                style="
+                  margin-left: 6px;
+                  cursor: pointer;
+                  font-size: 13px;
+                  color: var(--accent);
+                  text-transform: none;
+                  letter-spacing: 0;
+                "
+                >&#9432; ver exemplo</span
+              >
+            </label>
+            <div class="desc-help-box" id="desc-help-res">
+              <strong>Exemplo de descrição:</strong>
+              "Casa térrea com 3 quartos, sendo 1 suíte com closet e banheiro
+              privativo. Cozinha integrada com sala e área gourmet, lavabo, área
+              de serviço coberta, garagem para 2 carros e telhado embutido.
+              Quero deixar estrutura preparada para uma piscina futuramente."
+            </div>
+            <textarea
+              id="q6_descricao"
+              rows="5"
+              placeholder="Descreva os ambientes que deseja, prioridades e o que imagina para o seu projeto..."
+            ></textarea>
+            <div class="fnote">
+              Campo obrigatório — quanto mais detalhar, melhor conseguimos
+              orientar você.
+            </div>
+          </div>
+
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q5')">← Voltar</button>
+            <button
+              class="btn-p"
+              onclick="step_desc_next('q6_descricao', 'q6b')"
+            >
+              Continuar →
+            </button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       QC3 — TIPO DE USO COMERCIAL
+       🟡 Camada 2 | Auto-avança
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="qc3">
+          <div class="q-eyebrow">🟡 Detalhamento</div>
+          <h2 class="q-label">Qual é o tipo de uso comercial?</h2>
+          <div class="opts c2" id="grp-qc3">
+            <div
+              class="opc"
+              data-val="loja"
+              onclick="pick(this, 'grp-qc3', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Loja / varejo</div></div>
+            </div>
+            <div
+              class="opc"
+              data-val="clinica"
+              onclick="pick(this, 'grp-qc3', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Clínica / consultório</div></div>
+            </div>
+            <div
+              class="opc"
+              data-val="escritorio"
+              onclick="pick(this, 'grp-qc3', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Escritório / coworking</div></div>
+            </div>
+            <div
+              class="opc"
+              data-val="galpao"
+              onclick="pick(this, 'grp-qc3', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Galpão / indústria</div></div>
+            </div>
+            <div
+              class="opc"
+              data-val="restaurante"
+              onclick="pick(this, 'grp-qc3', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Restaurante / food service</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="outro"
+              onclick="pick(this, 'grp-qc3', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Outro tipo</div></div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q2b')">← Voltar</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       QC4 — ÁREA ESTIMADA COMERCIAL
+       🟡 Camada 2 | Campo texto + faixas | Botão
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="qc4">
+          <div class="q-eyebrow">🟡 Detalhamento</div>
+          <h2 class="q-label">Qual a área estimada?</h2>
+          <p class="q-hint">
+            Digite em m² se souber. Pode selecionar uma faixa ou avançar sem
+            preencher.
+          </p>
+          <div class="qf" style="margin-bottom: 14px">
+            <label>Área total (m²)</label>
+            <input
+              type="text"
+              id="qc_area_txt"
+              placeholder="Ex: 80, 200, 500..."
+              oninput="syncCAreaTxt()"
+            />
+          </div>
+          <div class="slbl">Ou selecione uma faixa aproximada</div>
+          <div class="opts c2" id="grp-qc4" style="margin-bottom: 20px">
+            <div
+              class="opc sm"
+              data-val="ate100"
+              onclick="pickTam('grp-qc4', 'qc_area_txt', this, 'ate100')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Até 100 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="100-300"
+              onclick="pickTam('grp-qc4', 'qc_area_txt', this, '100-300')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">100 – 300 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="300-1000"
+              onclick="pickTam('grp-qc4', 'qc_area_txt', this, '300-1000')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">300 – 1.000 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="1000+"
+              onclick="pickTam('grp-qc4', 'qc_area_txt', this, '1000+')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Acima de 1.000 m²</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="nao-sei"
+              onclick="pickTam('grp-qc4', 'qc_area_txt', this, 'nao-sei')"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Ainda não sei</div></div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('qc3')">← Voltar</button>
+            <button class="btn-p" onclick="goTo('qc5')">Continuar →</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       QC5 — PAVIMENTOS COMERCIAL
+       🟡 Camada 2 | Auto-avança
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="qc5">
+          <div class="q-eyebrow">🟡 Detalhamento</div>
+          <h2 class="q-label">Quantos pavimentos?</h2>
+          <div class="opts c2" id="grp-qc5">
+            <div class="opc" data-val="1" onclick="pick(this, 'grp-qc5', true)">
+              <div class="r"></div>
+              <div class="ot"><div class="om">Térreo (1 pavimento)</div></div>
+            </div>
+            <div class="opc" data-val="2" onclick="pick(this, 'grp-qc5', true)">
+              <div class="r"></div>
+              <div class="ot"><div class="om">2 pavimentos</div></div>
+            </div>
+            <div
+              class="opc"
+              data-val="3+"
+              onclick="pick(this, 'grp-qc5', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">3 ou mais</div></div>
+            </div>
+            <div
+              class="opc"
+              data-val="nao-sei"
+              onclick="pick(this, 'grp-qc5', true)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Ainda não sei</div></div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('qc4')">← Voltar</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       QC6 — CARACTERÍSTICAS COMERCIAL
+       🟡 Camada 2 | Checkbox + Botão
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="qc6">
+          <div class="q-eyebrow">🟡 Detalhamento</div>
+          <h2 class="q-label">Características especiais?</h2>
+          <p class="q-hint">Selecione o que se aplica — pode ser nenhum.</p>
+          <div class="opts" id="grp-qc6" style="margin-bottom: 20px">
+            <div
+              class="opc sm"
+              data-val="atend-publico"
+              onclick="multi(this, 'grp-qc6')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Atendimento ao público</div>
+                <div class="os">Há fluxo de clientes no espaço</div>
+              </div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="estacionamento"
+              onclick="multi(this, 'grp-qc6')"
+            >
+              <div class="cb"></div>
+              <div class="ot"><div class="om">Estacionamento</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="carga-descarga"
+              onclick="multi(this, 'grp-qc6')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Área de carga e descarga</div>
+              </div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="acessibilidade"
+              onclick="multi(this, 'grp-qc6')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Acessibilidade obrigatória</div>
+                <div class="os">Rampas, banheiros adaptados, etc.</div>
+              </div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="alto-padrao"
+              onclick="multi(this, 'grp-qc6')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Alto padrão de acabamento</div>
+              </div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="nenhum"
+              onclick="multi(this, 'grp-qc6')"
+            >
+              <div class="cb"></div>
+              <div class="ot"><div class="om">Nenhuma das acima</div></div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('qc5')">← Voltar</button>
+            <button class="btn-p" onclick="goTo('qc7')">Continuar →</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       QC7 — DESCRIÇÃO COMERCIAL — OBRIGATÓRIA
+       🟡 Camada 2 | Botão
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="qc7">
+          <div class="q-eyebrow">🟡 Detalhamento</div>
+          <h2 class="q-label">Descreva o projeto que você idealiza</h2>
+          <p class="q-hint">
+            Isso é fundamental para nossa equipe preparar uma orientação
+            adequada.
+          </p>
+          <div class="qf">
+            <label>
+              Descrição do projeto *
+              <span
+                onclick="toggleDescHelp('com')"
+                style="
+                  margin-left: 6px;
+                  cursor: pointer;
+                  font-size: 13px;
+                  color: var(--accent);
+                  text-transform: none;
+                  letter-spacing: 0;
+                "
+                >&#9432; ver exemplo</span
+              >
+            </label>
+            <div class="desc-help-box" id="desc-help-com">
+              <strong>Exemplo de descrição:</strong>
+              "Clínica odontológica com recepção para 6 pessoas, 3 consultórios,
+              sala de esterilização, banheiro social e banheiro para
+              funcionários. Quero estacionamento coberto para 4 carros,
+              acessibilidade completa e acabamento de médio a alto padrão."
+            </div>
+            <textarea
+              id="qc7_descricao"
+              rows="5"
+              placeholder="Descreva os ambientes necessários, fluxo de pessoas, prioridades e o que você imagina para o projeto..."
+            ></textarea>
+            <div class="fnote">
+              Campo obrigatório — quanto mais detalhar, melhor conseguimos
+              orientar você.
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('qc6')">← Voltar</button>
+            <button
+              class="btn-p"
+              onclick="step_desc_next('qc7_descricao', 'q7')"
+            >
+              Continuar →
+            </button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q6B — ESTILO ARQUITETÔNICO — RESIDENCIAL
+       🟡 Camada 2 | Multi-select + Botão
+       Permite combinar estilos ou descrever livremente
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q6b">
+          <div class="q-eyebrow">🟡 Detalhamento</div>
+          <h2 class="q-label">
+            Qual estilo mais combina com o que você imagina?
+          </h2>
+          <p class="q-hint">
+            Pode combinar mais de um — é só uma referência para orientar o
+            projeto.
+          </p>
+
+          <div class="opts c2" id="grp-q6b" style="margin-bottom: 20px">
+            <div
+              class="opc"
+              data-val="moderno"
+              onclick="multi(this, 'grp-q6b')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Moderno</div>
+                <div class="os">Linhas retas, vidro, volumes limpos</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="classico"
+              onclick="multi(this, 'grp-q6b')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Clássico / neoclássico</div>
+                <div class="os">Simétrico, mais imponente e elegante</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="minimalista"
+              onclick="multi(this, 'grp-q6b')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Minimalista</div>
+                <div class="os">Simples, poucos elementos, muito espaço</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="rustico"
+              onclick="multi(this, 'grp-q6b')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Rústico / natural</div>
+                <div class="os">Madeira, pedra, aconchegante</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="industrial"
+              onclick="multi(this, 'grp-q6b')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Industrial</div>
+                <div class="os">Concreto aparente, metal, urbano</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="contemporaneo-natureza"
+              onclick="multi(this, 'grp-q6b')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Integrado com a natureza</div>
+                <div class="os">Jardins, madeira, muita luz natural</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="contemporaneo"
+              onclick="multi(this, 'grp-q6b')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Contemporâneo</div>
+                <div class="os">
+                  Atual, mistura elementos modernos e clássicos
+                </div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="nao-sei"
+              onclick="multi(this, 'grp-q6b')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Não sei — quero orientação</div>
+                <div class="os">A equipe vai me ajudar a definir</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Campo livre opcional para quem quer descrever -->
+          <div class="qf">
+            <label
+              >Tem alguma referência de estilo?
+              <span
+                style="
+                  font-style: italic;
+                  font-size: 9px;
+                  text-transform: none;
+                  letter-spacing: 0;
+                "
+                >(opcional)</span
+              ></label
+            >
+            <input
+              type="text"
+              id="q6b_ref"
+              placeholder="Ex: casa que vi no Pinterest, fachada do bairro tal, casa de algum amigo..."
+            />
+          </div>
+
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q6')">← Voltar</button>
+            <button class="btn-p" onclick="goTo('q7')">Continuar →</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q7 — FASE ATUAL (compartilhado)
+       🔴 Camada 3 | Auto-avança
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q7">
+          <div class="q-eyebrow">🔴 Estratégico</div>
+          <h2 class="q-label">Qual é o seu momento hoje?</h2>
+          <div class="opts" id="grp-q7">
+            <div
+              class="opc"
+              data-val="pesquisando"
+              onclick="pick(this, 'grp-q7', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Só pesquisando — ainda é uma ideia</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="comparando"
+              onclick="pick(this, 'grp-q7', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Comparando opções ativamente</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="pronto"
+              onclick="pick(this, 'grp-q7', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">
+                  Pronto para iniciar — quero contratar em breve
+                </div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="orcando"
+              onclick="pick(this, 'grp-q7', true)"
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Apenas orçando por enquanto</div>
+              </div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="step_q7_back()">← Voltar</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q8 — FINANCIAMENTO (compartilhado)
+       🔴 Camada 3 | Auto-avança (não/ns) ou banco (sim)
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q8">
+          <div class="q-eyebrow">🔴 Recursos</div>
+          <h2 class="q-label">A obra será financiada?</h2>
+          <p class="q-hint">
+            Projetos financiados exigem planilhas e documentação específica por
+            banco.
+          </p>
+          <div class="opts c3" id="grp-q8">
+            <div
+              class="opc"
+              data-val="sim"
+              onclick="
+                pick(this, 'grp-q8', false);
+                toggleBanco(true);
+              "
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Sim</div></div>
+            </div>
+            <div
+              class="opc"
+              data-val="nao"
+              onclick="
+                pick(this, 'grp-q8', false);
+                toggleBanco(false);
+                adv('q9', 260);
+              "
+            >
+              <div class="r"></div>
+              <div class="ot">
+                <div class="om">Não</div>
+                <div class="os">Recurso próprio</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="nao-sei"
+              onclick="
+                pick(this, 'grp-q8', false);
+                toggleBanco(false);
+                adv('q9', 260);
+              "
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Ainda não sei</div></div>
+            </div>
+          </div>
+          <!-- Banco — condicional -->
+          <div class="cond" id="banco-blk">
+            <div class="slbl" style="margin-bottom: 9px">
+              Qual banco ou instituição?
+            </div>
+            <div class="opts c2" id="grp-q8-banco" style="margin-bottom: 16px">
+              <div
+                class="opc sm"
+                data-val="caixa"
+                onclick="
+                  pick(this, 'grp-q8-banco', false);
+                  setBancoOutro(false);
+                "
+              >
+                <div class="r"></div>
+                <div class="ot">
+                  <div class="om">Caixa Econômica Federal</div>
+                </div>
+              </div>
+              <div
+                class="opc sm"
+                data-val="sicoob"
+                onclick="
+                  pick(this, 'grp-q8-banco', false);
+                  setBancoOutro(false);
+                "
+              >
+                <div class="r"></div>
+                <div class="ot"><div class="om">Sicoob</div></div>
+              </div>
+              <div
+                class="opc sm"
+                data-val="sicredi"
+                onclick="
+                  pick(this, 'grp-q8-banco', false);
+                  setBancoOutro(false);
+                "
+              >
+                <div class="r"></div>
+                <div class="ot"><div class="om">Sicredi</div></div>
+              </div>
+              <div
+                class="opc sm"
+                data-val="outro"
+                onclick="
+                  pick(this, 'grp-q8-banco', false);
+                  setBancoOutro(true);
+                "
+              >
+                <div class="r"></div>
+                <div class="ot"><div class="om">Outro banco</div></div>
+              </div>
+            </div>
+            <div class="cond" id="banco-outro-blk">
+              <div class="qf" style="margin-bottom: 14px">
+                <label>Qual banco?</label
+                ><input
+                  type="text"
+                  id="q_banco_outro"
+                  placeholder="Nome do banco..."
+                />
+              </div>
+            </div>
+            <div class="nav">
+              <button class="btn-g" onclick="toggleBanco(false)">
+                ← Voltar
+              </button>
+              <button class="btn-p" onclick="goTo('q9')">Continuar →</button>
+            </div>
+          </div>
+          <div class="nav" id="q8-nav">
+            <button class="btn-g" onclick="goTo('q7')">← Voltar</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q9 — PROJETOS COMPLEMENTARES (compartilhado)
+       🔴 Camada 3 | Multi-select | Botão
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q9">
+          <div class="q-eyebrow">🔴 Projetos complementares</div>
+          <h2 class="q-label">Quer mais previsibilidade no custo da obra?</h2>
+          <div class="ibox">
+            <strong>Como funciona:</strong> projetos complementares permitem
+            orçar materiais com precisão antes da obra — estrutural calcula
+            ferragens exatas, elétrico gera lista de compras, hidrossanitário
+            elimina surpresas de tubulação.
+          </div>
+          <div class="opts" id="grp-q9" style="margin-bottom: 20px">
+            <div
+              class="opc"
+              data-val="estrutural"
+              onclick="multi(this, 'grp-q9')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Projeto estrutural</div>
+                <div class="os">Cálculo de ferragens e fundação</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="eletrico"
+              onclick="multi(this, 'grp-q9')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Projeto elétrico</div>
+                <div class="os">
+                  Lista de materiais precisa para orçar em qualquer loja
+                </div>
+              </div>
+            </div>
+            <div class="opc" data-val="hidro" onclick="multi(this, 'grp-q9')">
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Projeto hidrossanitário</div>
+                <div class="os">Tubulação dimensionada, sem improvisações</div>
+              </div>
+            </div>
+            <div
+              class="opc"
+              data-val="iluminacao"
+              onclick="multi(this, 'grp-q9')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Projeto de iluminação</div>
+                <div class="os">
+                  Pontos e intensidades planejados antes da laje
+                </div>
+              </div>
+            </div>
+            <div class="opc" data-val="nao-sei" onclick="multi(this, 'grp-q9')">
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Não sei — preciso de orientação</div>
+                <div class="os">
+                  Nossa equipe explica o que faz sentido para o seu projeto
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Interiores — só para residencial -->
+          <div class="cond" id="interiores-blk">
+            <div class="divider"></div>
+            <div class="slbl" style="margin-bottom: 9px">
+              Projeto de interiores
+            </div>
+            <p
+              style="font-size: 12px; color: var(--muted); margin-bottom: 12px"
+            >
+              Mobiliário, revestimentos e ambientação planejados antes da obra.
+            </p>
+            <div
+              class="opts c3"
+              id="grp-interiores"
+              style="margin-bottom: 20px"
+            >
+              <div
+                class="opc sm"
+                data-val="sim"
+                onclick="pick(this, 'grp-interiores', false)"
+              >
+                <div class="r"></div>
+                <div class="ot"><div class="om">Sim</div></div>
+              </div>
+              <div
+                class="opc sm"
+                data-val="nao"
+                onclick="pick(this, 'grp-interiores', false)"
+              >
+                <div class="r"></div>
+                <div class="ot"><div class="om">Não</div></div>
+              </div>
+              <div
+                class="opc sm"
+                data-val="talvez"
+                onclick="pick(this, 'grp-interiores', false)"
+              >
+                <div class="r"></div>
+                <div class="ot"><div class="om">Quero entender</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q8')">← Voltar</button>
+            <button class="btn-p" onclick="goTo('q11')">Continuar →</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q11 — OUTROS SERVIÇOS (compartilhado)
+       🔴 Camada 3 | Checkbox + Botão
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q11">
+          <div class="q-eyebrow">🔴 Outros serviços</div>
+          <h2 class="q-label">Mais algum serviço de interesse?</h2>
+          <p class="q-hint">Pode pular se nenhum se encaixar agora.</p>
+          <div class="opts" id="grp-q11" style="margin-bottom: 20px">
+            <div
+              class="opc sm"
+              data-val="acomp-obra"
+              onclick="multi(this, 'grp-q11')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Acompanhamento de obra</div>
+                <div class="os">
+                  Nossa equipe verifica execução, ferragens e processos no
+                  canteiro
+                </div>
+              </div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="inss"
+              onclick="multi(this, 'grp-q11')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Controle de INSS de obra</div>
+                <div class="os">
+                  Evite dívidas fiscais descobertas anos depois
+                </div>
+              </div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="regularizacao"
+              onclick="multi(this, 'grp-q11')"
+            >
+              <div class="cb"></div>
+              <div class="ot">
+                <div class="om">Regularização documental</div>
+              </div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="nenhum"
+              onclick="multi(this, 'grp-q11')"
+            >
+              <div class="cb"></div>
+              <div class="ot"><div class="om">Nenhum por agora</div></div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q9')">← Voltar</button>
+            <button class="btn-p" onclick="goTo('q12')">Continuar →</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q12 — PRAZO (compartilhado)
+       🔴 Camada 3 | Select + Botão
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q12">
+          <div class="q-eyebrow">🔴 Prazo</div>
+          <h2 class="q-label">Quando você pretende iniciar?</h2>
+          <p class="q-hint">
+            Uma estimativa já ajuda bastante no planejamento.
+          </p>
+          <div class="frow" style="margin-bottom: 20px">
+            <div class="qf" style="margin-bottom: 0">
+              <label>Mês</label>
+              <select id="q_prazo_mes">
+                <option value="">Selecione...</option>
+                <option value="01">Janeiro</option>
+                <option value="02">Fevereiro</option>
+                <option value="03">Março</option>
+                <option value="04">Abril</option>
+                <option value="05">Maio</option>
+                <option value="06">Junho</option>
+                <option value="07">Julho</option>
+                <option value="08">Agosto</option>
+                <option value="09">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+                <option value="nao-sei">Não sei o mês</option>
+              </select>
+            </div>
+            <div class="qf" style="margin-bottom: 0">
+              <label>Ano</label>
+              <select id="q_prazo_ano">
+                <!-- populado via JS -->
+              </select>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q11')">← Voltar</button>
+            <button class="btn-p" onclick="goTo('q13')">Continuar →</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q13 — INTENÇÃO DE CONTATO (compartilhado)
+       🔴 Camada 3 | Auto-avança
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q13">
+          <div class="q-eyebrow">🔴 Próximo passo</div>
+          <h2 class="q-label">Como prefere continuar?</h2>
+          <div class="int-grid" id="grp-q13">
+            <div
+              class="int-card"
+              data-val="agendar"
+              onclick="intSel(this, 'grp-q13', true)"
+            >
+              <div class="int-icon">📅</div>
+              <div>
+                <div class="int-main">Agendar uma reunião</div>
+                <div class="int-sub">Presencial ou online com a equipe</div>
+              </div>
+            </div>
+            <div
+              class="int-card"
+              data-val="proposta"
+              onclick="intSel(this, 'grp-q13', true)"
+            >
+              <div class="int-icon">📱</div>
+              <div>
+                <div class="int-main">Receber proposta pelo WhatsApp</div>
+                <div class="int-sub">Enviamos resumo com valores estimados</div>
+              </div>
+            </div>
+            <div
+              class="int-card"
+              data-val="entender"
+              onclick="intSel(this, 'grp-q13', true)"
+            >
+              <div class="int-icon">💬</div>
+              <div>
+                <div class="int-main">Só orientação por agora</div>
+                <div class="int-sub">
+                  Ainda tenho dúvidas, quero mais informações
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q12')">← Voltar</button>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+       Q14 — DADOS COMPLETOS + SUBMIT (compartilhado)
+       🔴 Camada 3
+  ══════════════════════════════════════════ -->
+        <div class="q-screen" id="q14">
+          <div class="q-eyebrow">🔴 Finalização</div>
+          <h2 class="q-label">Últimas informações</h2>
+          <p class="q-hint">
+            Respondemos em até 24 horas pelo canal que você preferir.
+          </p>
+
+          <div class="frow">
+            <div class="qf">
+              <label>Nome completo *</label
+              ><input type="text" id="q_nome" placeholder="Seu nome completo" />
+            </div>
+            <div class="qf">
+              <label>WhatsApp *</label
+              ><input
+                type="tel"
+                id="q_whats"
+                placeholder="(66) 99999-9999"
+                oninput="maskPhone(this)"
+              />
+            </div>
+          </div>
+          <div class="frow">
+            <div class="qf">
+              <label
+                >E-mail
+                <span
+                  style="
+                    font-style: italic;
+                    font-size: 9px;
+                    text-transform: none;
+                    letter-spacing: 0;
+                  "
+                  >(opcional)</span
+                ></label
+              ><input type="email" id="q_email" placeholder="seu@email.com" />
+            </div>
+            <div class="qf">
+              <label>Data de nascimento *</label
+              ><input type="date" id="q_nasc" />
+            </div>
+          </div>
+
+          <div class="slbl" style="margin-bottom: 9px">Canal preferido</div>
+          <div class="opts c3" id="grp-q14-canal" style="margin-bottom: 20px">
+            <div
+              class="opc sm"
+              data-val="whatsapp"
+              onclick="pick(this, 'grp-q14-canal', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">WhatsApp</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="ligacao"
+              onclick="pick(this, 'grp-q14-canal', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Ligação</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="email"
+              onclick="pick(this, 'grp-q14-canal', false)"
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">E-mail</div></div>
+            </div>
+          </div>
+
+          <div class="slbl" style="margin-bottom: 9px">
+            Há outra pessoa envolvida?
+          </div>
+          <div class="opts c2" id="grp-conj" style="margin-bottom: 14px">
+            <div
+              class="opc sm"
+              data-val="sim"
+              onclick="
+                pick(this, 'grp-conj', false);
+                toggleConj('sim');
+              "
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Sim — cônjuge ou sócio</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="nao"
+              onclick="
+                pick(this, 'grp-conj', false);
+                toggleConj('nao');
+              "
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Não</div></div>
+            </div>
+          </div>
+          <div class="cond" id="conj-fields">
+            <div class="frow">
+              <div class="qf">
+                <label>Nome</label
+                ><input type="text" id="q_conj_nome" placeholder="Nome" />
+              </div>
+              <div class="qf">
+                <label>Nascimento</label><input type="date" id="q_conj_nasc" />
+              </div>
+            </div>
+          </div>
+
+          <div class="slbl" style="margin-bottom: 9px">Como nos encontrou?</div>
+          <div class="opts c2" id="grp-origem" style="margin-bottom: 14px">
+            <div
+              class="opc sm"
+              data-val="instagram"
+              onclick="
+                pick(this, 'grp-origem', false);
+                toggleOrigem(this);
+              "
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Instagram</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="google"
+              onclick="
+                pick(this, 'grp-origem', false);
+                toggleOrigem(this);
+              "
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Google</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="indicacao"
+              onclick="
+                pick(this, 'grp-origem', false);
+                toggleOrigem(this);
+              "
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Indicação</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="frente"
+              onclick="
+                pick(this, 'grp-origem', false);
+                toggleOrigem(this);
+              "
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Escritório</div></div>
+            </div>
+            <div
+              class="opc sm"
+              data-val="outro"
+              onclick="
+                pick(this, 'grp-origem', false);
+                toggleOrigem(this);
+              "
+            >
+              <div class="r"></div>
+              <div class="ot"><div class="om">Outro</div></div>
+            </div>
+          </div>
+          <div class="cond qf" id="indicacao-field">
+            <label>Nome de quem indicou</label>
+            <input
+              type="text"
+              id="q_origem_out"
+              placeholder="Nome da pessoa que indicou"
+            />
+          </div>
+
+          <div class="qf">
+            <label>O que você espera da nossa conversa? *</label>
+            <textarea
+              id="q_expectativa"
+              placeholder="Ex: entender o custo total, saber se o terreno é viável, regularizar para vender..."
+            ></textarea>
+          </div>
+
+          <div class="nav">
+            <button class="btn-g" onclick="goTo('q13')">← Voltar</button>
+            <button class="btn-p" onclick="submitFull()">
+              Enviar diagnóstico ✓
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- /full-form -->
+
+      <!-- CAMINHO RÁPIDO -->
+      <div class="form-section" id="quick-form">
+        <div class="q-screen active">
+          <h2 class="q-label">Falar com a equipe</h2>
+          <p class="quick-intro">
+            Nos conte o que você precisa. Respondemos em até 24 horas.
+          </p>
+          <div class="qf">
+            <label>Nome *</label
+            ><input type="text" id="q_nome_quick" placeholder="Seu nome" />
+          </div>
+          <div class="qf">
+            <label>WhatsApp *</label
+            ><input
+              type="tel"
+              id="q_whats_quick"
+              placeholder="(66) 99999-9999"
+              oninput="maskPhone(this)"
+            />
+          </div>
+          <div class="qf">
+            <label>O que você precisa? *</label
+            ><textarea
+              id="q_msg_quick"
+              placeholder="Descreva brevemente..."
+            ></textarea>
+          </div>
+          <div class="nav">
+            <button class="btn-g" onclick="backToChooser()">← Voltar</button>
+            <button class="btn-p" onclick="submitQuick()">Enviar →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUCESSO -->
+      <div class="success-screen" id="success-screen">
+        <div class="s-icon">✓</div>
+        <h2 class="s-title">Diagnóstico recebido!</h2>
+        <p class="s-text" id="s-text">
+          Obrigado. Nossa equipe entrará em contato em até 24 horas.
+        </p>
+        <div class="s-badge" id="s-badge"></div>
+        <br /><br />
+        <p style="font-size: 12px; color: var(--muted)">
+          Acompanhe nosso Instagram
+          <strong style="color: var(--accent)">@engenharia_alvesqueiroz</strong>
+        </p>
+      </div>
+
+      <footer class="site-footer">
+        <div class="footer-brand">
+          Alves e Queiroz · Engenharia | Arquitetura
+        </div>
+        <div class="footer-contact">+55 66 9 9626-7717 · Alta Floresta/MT</div>
+      </footer>
+    </div>
+    <!-- /page-wrap -->
+
+    <script>
+      /* ══════════════════════════════════════════════════════════════
+   CONFIG — altere apenas estas constantes antes de publicar
+══════════════════════════════════════════════════════════════ */
+      const NUMERO_AQ = "5566996267717";
+      const CRM_ENDPOINT =
+        "https://script.google.com/macros/s/AKfycbyT-cSSRa8D-9L6BmVgB_edWcoWunOmPGdLXsOmc-nRL9H-vtZeXZrMnqJEpczNoFsT/exec"; // Cole aqui a URL do Google Apps Script
+
+      /* STATE */
+      const A = {}; // respostas
+
+      /* ── INIT ──────────────────────────────────────────────────── */
+      (function init() {
+        const ano = new Date().getFullYear();
+        const sel = document.getElementById("q_prazo_ano");
+        sel.innerHTML = '<option value="">Selecione...</option>';
+        [
+          ["nao-sei", "Ainda não sei"],
+          ["orcando", "Apenas orçando"],
+        ].forEach(([v, t]) => {
+          const o = document.createElement("option");
+          o.value = v;
+          o.textContent = t;
+          sel.appendChild(o);
+        });
+        for (let a = ano; a <= ano + 5; a++) {
+          const o = document.createElement("option");
+          o.value = a;
+          o.textContent = a;
+          sel.appendChild(o);
+        }
+        document.getElementById("q_cidade_sel").disabled = true;
+      })();
+
+      /* ── CIDADES ───────────────────────────────────────────────── */
+      const CIDADES = {
+        Acre: [
+          "Rio Branco",
+          "Cruzeiro do Sul",
+          "Sena Madureira",
+          "Tarauacá",
+          "Feijó",
+          "Outra cidade (não listada)",
+        ],
+        Alagoas: [
+          "Maceió",
+          "Arapiraca",
+          "Rio Largo",
+          "Palmeira dos Índios",
+          "União dos Palmares",
+          "Outra cidade (não listada)",
+        ],
+        Amapá: [
+          "Macapá",
+          "Santana",
+          "Laranjal do Jari",
+          "Oiapoque",
+          "Outra cidade (não listada)",
+        ],
+        Amazonas: [
+          "Manaus",
+          "Parintins",
+          "Itacoatiara",
+          "Manacapuru",
+          "Coari",
+          "Tefé",
+          "Tabatinga",
+          "Outra cidade (não listada)",
+        ],
+        Bahia: [
+          "Salvador",
+          "Feira de Santana",
+          "Vitória da Conquista",
+          "Camaçari",
+          "Itabuna",
+          "Juazeiro",
+          "Ilhéus",
+          "Barreiras",
+          "Porto Seguro",
+          "Outra cidade (não listada)",
+        ],
+        Ceará: [
+          "Fortaleza",
+          "Caucaia",
+          "Juazeiro do Norte",
+          "Maracanaú",
+          "Sobral",
+          "Crato",
+          "Outra cidade (não listada)",
+        ],
+        "Distrito Federal": [
+          "Brasília",
+          "Taguatinga",
+          "Ceilândia",
+          "Samambaia",
+          "Gama",
+          "Sobradinho",
+          "Outra cidade (não listada)",
+        ],
+        "Espírito Santo": [
+          "Vitória",
+          "Serra",
+          "Vila Velha",
+          "Cariacica",
+          "Cachoeiro de Itapemirim",
+          "Linhares",
+          "Outra cidade (não listada)",
+        ],
+        Goiás: [
+          "Goiânia",
+          "Aparecida de Goiânia",
+          "Anápolis",
+          "Rio Verde",
+          "Luziânia",
+          "Formosa",
+          "Catalão",
+          "Outra cidade (não listada)",
+        ],
+        Maranhão: [
+          "São Luís",
+          "Imperatriz",
+          "São José de Ribamar",
+          "Timon",
+          "Caxias",
+          "Outra cidade (não listada)",
+        ],
+        "Mato Grosso": [
+          "Alta Floresta",
+          "Sinop",
+          "Cuiabá",
+          "Várzea Grande",
+          "Rondonópolis",
+          "Tangará da Serra",
+          "Cáceres",
+          "Sorriso",
+          "Lucas do Rio Verde",
+          "Primavera do Leste",
+          "Barra do Garças",
+          "Nova Mutum",
+          "Colíder",
+          "Guarantã do Norte",
+          "Peixoto de Azevedo",
+          "Matupá",
+          "Terra Nova do Norte",
+          "Paranaíta",
+          "Carlinda",
+          "Apiacás",
+          "Nova Bandeirantes",
+          "Juara",
+          "Confresa",
+          "Outra cidade (não listada)",
+        ],
+        "Mato Grosso do Sul": [
+          "Campo Grande",
+          "Dourados",
+          "Três Lagoas",
+          "Corumbá",
+          "Ponta Porã",
+          "Naviraí",
+          "Outra cidade (não listada)",
+        ],
+        "Minas Gerais": [
+          "Belo Horizonte",
+          "Uberlândia",
+          "Contagem",
+          "Juiz de Fora",
+          "Betim",
+          "Montes Claros",
+          "Uberaba",
+          "Outra cidade (não listada)",
+        ],
+        Pará: [
+          "Belém",
+          "Ananindeua",
+          "Santarém",
+          "Marabá",
+          "Castanhal",
+          "Parauapebas",
+          "Altamira",
+          "Outra cidade (não listada)",
+        ],
+        Paraíba: [
+          "João Pessoa",
+          "Campina Grande",
+          "Santa Rita",
+          "Patos",
+          "Sousa",
+          "Outra cidade (não listada)",
+        ],
+        Paraná: [
+          "Curitiba",
+          "Londrina",
+          "Maringá",
+          "Ponta Grossa",
+          "Cascavel",
+          "São José dos Pinhais",
+          "Foz do Iguaçu",
+          "Colombo",
+          "Guarapuava",
+          "Toledo",
+          "Outra cidade (não listada)",
+        ],
+        Pernambuco: [
+          "Recife",
+          "Caruaru",
+          "Olinda",
+          "Petrolina",
+          "Jaboatão dos Guararapes",
+          "Paulista",
+          "Outra cidade (não listada)",
+        ],
+        Piauí: [
+          "Teresina",
+          "Parnaíba",
+          "Picos",
+          "Floriano",
+          "Outra cidade (não listada)",
+        ],
+        "Rio de Janeiro": [
+          "Rio de Janeiro",
+          "São Gonçalo",
+          "Duque de Caxias",
+          "Nova Iguaçu",
+          "Niterói",
+          "Campos dos Goytacazes",
+          "Petrópolis",
+          "Cabo Frio",
+          "Outra cidade (não listada)",
+        ],
+        "Rio Grande do Norte": [
+          "Natal",
+          "Mossoró",
+          "Parnamirim",
+          "Caicó",
+          "Outra cidade (não listada)",
+        ],
+        "Rio Grande do Sul": [
+          "Porto Alegre",
+          "Caxias do Sul",
+          "Canoas",
+          "Pelotas",
+          "Santa Maria",
+          "Novo Hamburgo",
+          "São Leopoldo",
+          "Passo Fundo",
+          "Outra cidade (não listada)",
+        ],
+        Rondônia: [
+          "Porto Velho",
+          "Ji-Paraná",
+          "Ariquemes",
+          "Cacoal",
+          "Vilhena",
+          "Rolim de Moura",
+          "Outra cidade (não listada)",
+        ],
+        Roraima: ["Boa Vista", "Rorainópolis", "Outra cidade (não listada)"],
+        "Santa Catarina": [
+          "Joinville",
+          "Florianópolis",
+          "Blumenau",
+          "São José",
+          "Criciúma",
+          "Chapecó",
+          "Itajaí",
+          "Balneário Camboriú",
+          "Outra cidade (não listada)",
+        ],
+        "São Paulo": [
+          "São Paulo",
+          "Guarulhos",
+          "Campinas",
+          "São Bernardo do Campo",
+          "Santo André",
+          "Ribeirão Preto",
+          "Osasco",
+          "Sorocaba",
+          "São José dos Campos",
+          "Santos",
+          "Jundiaí",
+          "Piracicaba",
+          "Outra cidade (não listada)",
+        ],
+        Sergipe: [
+          "Aracaju",
+          "Nossa Senhora do Socorro",
+          "Lagarto",
+          "Estância",
+          "Outra cidade (não listada)",
+        ],
+        Tocantins: [
+          "Palmas",
+          "Araguaína",
+          "Gurupi",
+          "Porto Nacional",
+          "Outra cidade (não listada)",
+        ],
+      };
+
+      function updateCidades(est) {
+        const sel = document.getElementById("q_cidade_sel");
+        const lista = CIDADES[est] || ["Outra cidade (não listada)"];
+        sel.innerHTML =
+          '<option value="">Selecione a cidade...</option>' +
+          lista.map((c) => `<option value="${c}">${c}</option>`).join("");
+        sel.disabled = !est;
+        sel.onchange = function () {
+          const blk = document.getElementById("outra-cidade-blk");
+          this.value === "Outra cidade (não listada)"
+            ? blk.classList.add("show")
+            : blk.classList.remove("show");
+        };
+      }
+
+      /* ── NAVEGAÇÃO ─────────────────────────────────────────────── */
+      function goTo(id) {
+        document
+          .querySelectorAll(".q-screen")
+          .forEach((s) => s.classList.remove("active"));
+        const t = document.getElementById(id);
+        if (t) {
+          t.classList.add("active");
+          updateProgress(id);
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function adv(id, ms) {
+        setTimeout(() => goTo(id), ms);
+      }
+
+      function choosePath(type) {
+        document.getElementById("path-chooser").style.display = "none";
+        document.getElementById("hero-section").style.marginBottom = "38px";
+        if (type === "full") {
+          document.getElementById("full-form").classList.add("visible");
+          goTo("q1");
+        } else {
+          document.getElementById("quick-form").classList.add("visible");
+        }
+      }
+
+      function backToChooser() {
+        ["quick-form", "full-form"].forEach((id) =>
+          document.getElementById(id).classList.remove("visible"),
+        );
+        document.getElementById("path-chooser").style.display = "grid";
+        document.getElementById("hero-section").style.marginBottom = "";
+      }
+
+      /* ── LÓGICA DE AVANÇO POR TELA ─────────────────────────────── */
+      function pick(el, gid, advance) {
+        document
+          .getElementById(gid)
+          ?.querySelectorAll(".opc")
+          .forEach((o) => o.classList.remove("sel"));
+        el.classList.add("sel");
+        A[gid] = el.dataset.val;
+        if (advance) setTimeout(() => pickAdv(gid), 200);
+      }
+
+      function pickAdv(gid) {
+        switch (gid) {
+          case "grp-q1":
+            A.q1 = A[gid];
+            if (A.q1 === "residencial") goTo("q2-res");
+            else if (A.q1 === "comercial") goTo("qc2");
+            break;
+          case "grp-q2-res":
+            goTo("q2b");
+            break;
+          case "grp-qc2":
+            goTo("q2b");
+            break;
+          case "grp-q3":
+            if (A[gid] === "sim-regular" || A[gid] === "sim-pendencias")
+              goTo("q3b");
+            else goTo("q4");
+            break;
+          case "grp-q4":
+            goTo("q5");
+            break;
+          case "grp-qc3":
+            goTo("qc4");
+            break;
+          case "grp-qc5":
+            goTo("qc6");
+            break;
+          case "grp-q7":
+            goTo("q8");
+            break;
+          case "grp-q13":
+            goTo("q14");
+            break;
+        }
+      }
+
+      function multi(el, gid) {
+        el.classList.toggle("sel");
+        if (!A[gid]) A[gid] = [];
+        const v = el.dataset.val;
+        el.classList.contains("sel")
+          ? !A[gid].includes(v) && A[gid].push(v)
+          : (A[gid] = A[gid].filter((x) => x !== v));
+      }
+
+      function intSel(el, gid, advance) {
+        document
+          .querySelectorAll(`#${gid} .int-card`)
+          .forEach((o) => o.classList.remove("sel"));
+        el.classList.add("sel");
+        A[gid] = el.dataset.val;
+        if (advance) setTimeout(() => goTo("q14"), 220);
+      }
+
+      /* Helpers de navegação condicional */
+      function step_q2b_back() {
+        if (A.q1 === "residencial") goTo("q2-res");
+        else goTo("qc2");
+      }
+
+      function step_q2b_next() {
+        const nome = document.getElementById("q_nome_early").value.trim();
+        const whats = document.getElementById("q_whats_early").value.trim();
+        const est = document.getElementById("q_estado").value;
+        const cid = document.getElementById("q_cidade_sel").value;
+        if (!nome) return shake("q_nome_early");
+        if (!whats) return shake("q_whats_early");
+        if (!est) return shake("q_estado");
+        if (!cid) return shake("q_cidade_sel");
+        const cidFinal =
+          cid === "Outra cidade (não listada)"
+            ? document.getElementById("q_cidade_outro")?.value.trim() ||
+              "Outra cidade"
+            : cid;
+        A._nome_early = nome;
+        A._whats_early = whats;
+        A.q_estado = est;
+        A.q_cidade = cidFinal;
+        document.getElementById("q_nome").value = nome;
+        document.getElementById("q_whats").value = whats;
+        // Envia lead_partial ao CRM (anti-abandono)
+        postCRM({
+          tipo: "lead_partial",
+          ts: ts(),
+          nome,
+          whats,
+          estado: est,
+          cidade: cidFinal,
+          tipo_projeto: A.q1 || "—",
+          objetivo: getObj(),
+        });
+        if (A.q1 === "residencial") goTo("q3");
+        else goTo("qc3"); // comercial pula terreno, vai para tipo de uso
+      }
+
+      function step_q4_back() {
+        // Voltar de Q4: se tinha terreno vai para Q3B, senão Q3
+        if (A["grp-q3"] === "sim-regular" || A["grp-q3"] === "sim-pendencias")
+          goTo("q3b");
+        else goTo("q3");
+      }
+
+      function step_q7_back() {
+        if (A.q1 === "residencial") goTo("q6b");
+        else goTo("qc7");
+      }
+
+      function step_desc_next(fieldId, nextScreen) {
+        const val = document.getElementById(fieldId)?.value.trim() || "";
+        if (!val) {
+          shake(fieldId);
+          return;
+        }
+        A[fieldId] = val;
+        goTo(nextScreen);
+      }
+
+      /* Mostra/oculta interiores (só residencial) */
+      function updateInteriorBlk() {
+        const blk = document.getElementById("interiores-blk");
+        A.q1 === "residencial"
+          ? blk.classList.add("show")
+          : blk.classList.remove("show");
+      }
+
+      /* Campos com texto + faixas */
+      function pickTam(grpId, txtId, el, val) {
+        document.getElementById(txtId).value = "";
+        document
+          .getElementById(grpId)
+          ?.querySelectorAll(".opc")
+          .forEach((o) => o.classList.remove("sel"));
+        el.classList.add("sel");
+        A[grpId] = val;
+      }
+      function syncTerrenoTam() {
+        if (document.getElementById("q_terreno_txt").value.trim()) {
+          document
+            .getElementById("grp-q3b")
+            ?.querySelectorAll(".opc")
+            .forEach((o) => o.classList.remove("sel"));
+          A["grp-q3b"] = null;
+        }
+      }
+      function syncAreaTxt() {
+        if (document.getElementById("q_area_txt").value.trim()) {
+          document
+            .getElementById("grp-q5")
+            ?.querySelectorAll(".opc")
+            .forEach((o) => o.classList.remove("sel"));
+          A["grp-q5"] = null;
+        }
+      }
+      function syncCAreaTxt() {
+        if (document.getElementById("qc_area_txt").value.trim()) {
+          document
+            .getElementById("grp-qc4")
+            ?.querySelectorAll(".opc")
+            .forEach((o) => o.classList.remove("sel"));
+          A["grp-qc4"] = null;
+        }
+      }
+
+      function toggleBanco(show) {
+        document
+          .getElementById("banco-blk")
+          .classList[show ? "add" : "remove"]("show");
+        document.getElementById("q8-nav").style.display = show
+          ? "none"
+          : "flex";
+      }
+      function setBancoOutro(show) {
+        document
+          .getElementById("banco-outro-blk")
+          .classList[show ? "add" : "remove"]("show");
+      }
+      function toggleConj(v) {
+        document
+          .getElementById("conj-fields")
+          .classList[v === "sim" ? "add" : "remove"]("show");
+      }
+      function toggleOrigem(el) {
+        document
+          .getElementById("indicacao-field")
+          .classList[el.dataset.val === "indicacao" ? "add" : "remove"]("show");
+      }
+      function toggleDescHelp(tipo) {
+        const id = tipo === "res" ? "desc-help-res" : "desc-help-com";
+        const el = document.getElementById(id);
+        el.style.display =
+          el.style.display === "none" || !el.style.display ? "block" : "none";
+      }
+
+      /* ── PROGRESS ──────────────────────────────────────────────── */
+      const FLOWS = {
+        residencial: [
+          "q1",
+          "q2-res",
+          "q2b",
+          "q3",
+          "q3b",
+          "q4",
+          "q5",
+          "q6",
+          "q6b",
+          "q7",
+          "q8",
+          "q9",
+          "q11",
+          "q12",
+          "q13",
+          "q14",
+        ],
+        comercial: [
+          "q1",
+          "qc2",
+          "q2b",
+          "qc3",
+          "qc4",
+          "qc5",
+          "qc6",
+          "qc7",
+          "q7",
+          "q8",
+          "q9",
+          "q11",
+          "q12",
+          "q13",
+          "q14",
+        ],
+      };
+      const LAYER_MAP = {
+        q1: "🟢 Entrada",
+        "q2-res": "🟢 Objetivo",
+        qc2: "🟢 Objetivo",
+        q2b: "🟢 Identificação",
+        q3: "🟢 Terreno",
+        q3b: "🟢 Terreno",
+        q4: "🟡 Detalhes",
+        q5: "🟡 Detalhes",
+        q6: "🟡 Detalhes",
+        qc3: "🟡 Detalhes",
+        qc4: "🟡 Detalhes",
+        qc5: "🟡 Detalhes",
+        qc6: "🟡 Detalhes",
+        qc7: "🟡 Detalhes",
+        q6b: "🟡 Estilo",
+        q7: "🔴 Estratégico",
+        q8: "🔴 Recursos",
+        q9: "🔴 Serviços",
+        q11: "🔴 Serviços",
+        q12: "🔴 Prazo",
+        q13: "🔴 Próximo passo",
+        q14: "🔴 Finalização",
+      };
+
+      function updateProgress(screenId) {
+        const tipo = A.q1 || "residencial";
+        const flow = FLOWS[tipo] || FLOWS.residencial;
+        const idx = flow.indexOf(screenId);
+        const total = flow.length;
+        const pct = idx >= 0 ? Math.round((idx / (total - 1)) * 100) : 0;
+        document.getElementById("prog-fill").style.width = pct + "%";
+        document.getElementById("prog-layer").textContent =
+          LAYER_MAP[screenId] || "";
+        document.getElementById("prog-counter").textContent =
+          `${Math.max(1, idx + 1)} / ${total}`;
+        // Mostrar/ocultar interiores quando chegar em Q9
+        if (screenId === "q9") updateInteriorBlk();
+      }
+
+      /* ── LABELS ────────────────────────────────────────────────── */
+      const LBL = {
+        grp_q1: { residencial: "Residencial", comercial: "Comercial" },
+        grp_q2_res: {
+          "moradia-propria": "Moradia própria",
+          venda: "Venda após construção",
+          aluguel: "Geração de renda",
+          multiplicacao: "Multiplicar o terreno",
+          patrimonio: "Formação de patrimônio",
+        },
+        grp_qc2: {
+          "uso-proprio": "Uso próprio",
+          "aluguel-com": "Alugar para terceiros",
+          "venda-com": "Venda após construir",
+          expansao: "Expansão do negócio",
+        },
+        grp_q3: {
+          "sim-regular": "Sim — regular",
+          "sim-pendencias": "Sim — pendências",
+          procurando: "Procurando",
+          "sem-terreno": "Sem terreno",
+        },
+        grp_q4: {
+          terrea: "Térrea",
+          sobrado: "Sobrado",
+          "3-pav": "3+ pavimentos",
+          "nao-sei": "Não definido",
+        },
+        grp_q6_qtos: { 1: "1", 2: "2", 3: "3", "4+": "4+" },
+        grp_q6_suits: { 0: "Nenhuma", 1: "1", 2: "2", "3+": "3+" },
+        grp_q6_gar: {
+          sem: "Sem garagem",
+          1: "1 vaga",
+          2: "2 vagas",
+          "3+": "3+",
+        },
+        grp_q6_tel: {
+          embutido: "Embutido/laje",
+          aparente: "Aparente/colonial",
+        },
+        grp_q6_ext: { piscina: "Piscina", ampliacao: "Previsão de ampliação" },
+        grp_qc3: {
+          loja: "Loja/varejo",
+          clinica: "Clínica/consultório",
+          escritorio: "Escritório",
+          galpao: "Galpão/indústria",
+          restaurante: "Restaurante",
+          outro: "Outro",
+        },
+        grp_qc5: {
+          1: "Térreo",
+          2: "2 pavimentos",
+          "3+": "3+ pavimentos",
+          "nao-sei": "Não definido",
+        },
+        grp_qc6: {
+          "atend-publico": "Atend. público",
+          estacionamento: "Estacionamento",
+          "carga-descarga": "Carga e descarga",
+          acessibilidade: "Acessibilidade",
+          "alto-padrao": "Alto padrão",
+          nenhum: "Nenhum",
+        },
+        grp_q6b: {
+          moderno: "Moderno",
+          classico: "Clássico/Neoclássico",
+          minimalista: "Minimalista",
+          rustico: "Rústico/Natural",
+          industrial: "Industrial",
+          "contemporaneo-natureza": "Integrado c/ natureza",
+          contemporaneo: "Contemporâneo",
+          "nao-sei": "Quero orientação",
+        },
+        grp_q7: {
+          pesquisando: "Só pesquisando",
+          comparando: "Comparando",
+          pronto: "Pronto para iniciar",
+          orcando: "Apenas orçando",
+        },
+        grp_q8: {
+          sim: "Sim",
+          nao: "Não — recurso próprio",
+          "nao-sei": "Não sabe",
+        },
+        grp_q8_banco: {
+          caixa: "Caixa Econômica Federal",
+          sicoob: "Sicoob",
+          sicredi: "Sicredi",
+          outro: "Outro banco",
+        },
+        grp_q9: {
+          estrutural: "Estrutural",
+          eletrico: "Elétrico",
+          hidro: "Hidrossanitário",
+          iluminacao: "Iluminação",
+          "nao-sei": "Precisa orientação",
+        },
+        grp_interiores: { sim: "Sim", nao: "Não", talvez: "Quero entender" },
+        grp_q11: {
+          "acomp-obra": "Acompanhamento de obra",
+          inss: "INSS de obra",
+          regularizacao: "Regularização",
+          nenhum: "Nenhum",
+        },
+        grp_q13: {
+          agendar: "Agendar reunião",
+          proposta: "Proposta por WhatsApp",
+          entender: "Só orientação",
+        },
+        grp_q14_canal: {
+          whatsapp: "WhatsApp",
+          ligacao: "Ligação",
+          email: "E-mail",
+        },
+        grp_origem: {
+          instagram: "Instagram",
+          google: "Google",
+          indicacao: "Indicação",
+          frente: "Escritório",
+          outro: "Outro",
+        },
+      };
+
+      function L(k) {
+        // Normaliza hífen para underscore para compatibilidade com as chaves do LBL
+        const lk = k.replace(/-/g, "_");
+        const tbl = LBL[lk] || LBL[k];
+        const val = A[k];
+        if (!tbl || val === undefined) return val || "—";
+        if (Array.isArray(val)) return val.map((v) => tbl[v] || v).join(", ");
+        return tbl[val] || val;
+      }
+
+      function getObj() {
+        if (A.q1 === "residencial") return L("grp-q2-res");
+        if (A.q1 === "comercial") return L("grp-qc2");
+        return "—";
+      }
+
+      function planilhaBanco() {
+        if (A["grp-q8"] !== "sim") return "";
+        const m = {
+          caixa: "PCI_CAIXA",
+          sicoob: "PLANILHA_SICOOB",
+          sicredi: "PLANILHA_SICREDI",
+          outro: "OUTRO_CONFIRMAR",
+        };
+        return m[A["grp-q8-banco"]] || "OUTRO_CONFIRMAR";
+      }
+
+      /* ── CLASSIFICAÇÃO ─────────────────────────────────────────── */
+      function classifyLead() {
+        const tipo = A.q1 || "";
+        const fase = A["grp-q7"] || "";
+        const terreno = A["grp-q3"] || "";
+        const financ = A["grp-q8"] || "";
+        const obj = getObj();
+        const compl = A["grp-q9"] || [];
+        const outros = A["grp-q11"] || [];
+        const intenc = A["grp-q13"] || "";
+        const area = A["grp-q5"] || A["grp-qc4"] || "";
+
+        let score = 0;
+        const regras = [];
+
+        if (fase === "pronto") {
+          score += 5;
+          regras.push("fase=pronto+5");
+        }
+        if (fase === "comparando") {
+          score += 3;
+          regras.push("fase=comparando+3");
+        }
+        if (fase === "orcando") {
+          score -= 1;
+          regras.push("fase=orcando-1");
+        }
+        if (terreno === "sim-regular") {
+          score += 3;
+          regras.push("terreno_regular+3");
+        }
+        if (terreno === "sim-pendencias") {
+          score += 1;
+          regras.push("terreno_pendencias+1");
+        }
+        if (financ === "sim") {
+          score += 3;
+          regras.push("financiado+3");
+        }
+        if (tipo === "comercial") {
+          score += 2;
+          regras.push("tipo_comercial+2");
+        }
+        if (
+          [
+            "venda",
+            "multiplicacao",
+            "aluguel",
+            "aluguel-com",
+            "venda-com",
+          ].includes(obj)
+        ) {
+          score += 2;
+          regras.push("obj_investimento+2");
+        }
+        if (intenc === "agendar") {
+          score += 3;
+          regras.push("intencao_agendar+3");
+        }
+        if (intenc === "proposta") {
+          score += 2;
+          regras.push("intencao_proposta+2");
+        }
+        if (
+          Array.isArray(compl) &&
+          compl.length > 0 &&
+          !compl.includes("nao-sei")
+        ) {
+          score += 2;
+          regras.push("complementares+2");
+        }
+        if (["250+", "150-250", "1000+", "300-1000"].includes(area)) {
+          score += 2;
+          regras.push("area_grande+2");
+        }
+        if (Array.isArray(outros) && outros.includes("acomp-obra")) {
+          score += 1;
+          regras.push("acomp_obra+1");
+        }
+
+        let badge, owner;
+        const hasINSS = Array.isArray(outros) && outros.includes("inss");
+
+        if (score >= 10) {
+          badge = "🔥 Quente";
+          owner = "Izabela — contato no mesmo dia";
+        } else if (score >= 5) {
+          badge = "🟡 Morno";
+          owner = "Izabela — resposta em até 24h";
+        } else {
+          badge = "🔵 Frio";
+          owner = "Vinicius — nutrição e acompanhamento";
+        }
+
+        if (hasINSS) {
+          owner = "Grazielle — INSS de obra";
+          regras.push("route=grazielle_inss");
+        }
+
+        return { badge, owner, score, regras };
+      }
+
+      /* ── CRM ───────────────────────────────────────────────────── */
+      function ts() {
+        return new Date().toISOString();
+      }
+      function postCRM(payload) {
+        console.log("[CRM payload]", JSON.stringify(payload, null, 2));
+        if (!CRM_ENDPOINT) return;
+        fetch(CRM_ENDPOINT, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }).catch(() => {});
+      }
+
+      /* ── SUBMIT ────────────────────────────────────────────────── */
+      function submitFull() {
+        const nome = document.getElementById("q_nome").value.trim();
+        const whats = document.getElementById("q_whats").value.trim();
+        const exp = document.getElementById("q_expectativa").value.trim();
+        const nasc = document.getElementById("q_nasc").value;
+        if (!nome) return shake("q_nome");
+        if (!whats) return shake("q_whats");
+        if (!nasc) return shake("q_nasc");
+        if (!exp) return shake("q_expectativa");
+
+        const cl = classifyLead();
+        const email = document.getElementById("q_email").value.trim() || "—";
+        const conjNome =
+          document.getElementById("q_conj_nome")?.value.trim() || "";
+        const conjNasc =
+          document.getElementById("q_conj_nasc")?.value.trim() || "";
+        const origemOut =
+          document.getElementById("q_origem_out")?.value.trim() || "";
+        const bancOut =
+          document.getElementById("q_banco_outro")?.value.trim() || "";
+        const prazoMes = document.getElementById("q_prazo_mes").value || "";
+        const prazoAno = document.getElementById("q_prazo_ano").value || "";
+        const desc6 =
+          document.getElementById("q6_descricao")?.value.trim() || "";
+        const descC7 =
+          document.getElementById("qc7_descricao")?.value.trim() || "";
+        const desc = desc6 || descC7;
+        const terTxt = document.getElementById("q_terreno_txt")?.value.trim();
+        const areaTxt = document.getElementById("q_area_txt")?.value.trim();
+        const cAreaTxt = document.getElementById("qc_area_txt")?.value.trim();
+
+        const terFmt = terTxt
+          ? terTxt + "m²"
+          : A["grp-q3b"]
+            ? LBL.grp_q4?.[A["grp-q3b"]] || A["grp-q3b"]
+            : "—";
+        const areaFmt = areaTxt
+          ? areaTxt + "m²"
+          : A["grp-q5"]
+            ? A["grp-q5"]
+            : cAreaTxt
+              ? cAreaTxt + "m²"
+              : A["grp-qc4"] || "—";
+
+        const meses = [
+          "",
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Maio",
+          "Junho",
+          "Julho",
+          "Agosto",
+          "Setembro",
+          "Outubro",
+          "Novembro",
+          "Dezembro",
+        ];
+        let prazoFmt = "—";
+        if (prazoAno === "orcando") prazoFmt = "Apenas orçando";
+        else if (prazoAno === "nao-sei" || prazoMes === "nao-sei")
+          prazoFmt = "Ainda não definido";
+        else if (prazoMes && prazoAno)
+          prazoFmt = `${meses[parseInt(prazoMes)] || ""}/${prazoAno}`;
+
+        const origemFmt =
+          A["grp-origem"] === "indicacao" && origemOut
+            ? `Indicação de: ${origemOut}`
+            : L("grp-origem");
+        const bancoFmt =
+          A["grp-q8-banco"] === "outro" && bancOut
+            ? `Outro: ${bancOut}`
+            : L("grp-q8-banco");
+
+        // ── Mensagem WhatsApp ─────────────────────────────────────
+        let msg = `*DIAGNÓSTICO — AQ ENGENHARIA*\n━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+        msg += `*CLIENTE*\nNome: ${nome}\nWhatsApp: ${whats}\nE-mail: ${email}\nNascimento: ${nasc}\n`;
+        if (conjNome)
+          msg += `Cônjuge/Sócio: ${conjNome}${conjNasc ? " · " + conjNasc : ""}\n`;
+        msg += `Canal: ${L("grp-q14-canal")}\nIntenção: ${L("grp-q13")}\nComo chegou: ${origemFmt}\n\n`;
+
+        msg += `*PROJETO*\nTipo: ${A.q1 === "residencial" ? "Residencial" : "Comercial"}\nObjetivo: ${getObj()}\n`;
+        msg += `Estado: ${A.q_estado || "—"} / Cidade: ${A.q_cidade || "—"}\n\n`;
+
+        if (A.q1 === "residencial") {
+          msg += `*TERRENO*\nSituação: ${L("grp-q3")}\n`;
+          if (A["grp-q3"] === "sim-regular" || A["grp-q3"] === "sim-pendencias")
+            msg += `Tamanho: ${terFmt}\n`;
+          msg += `\n`;
+          msg += `*CARACTERÍSTICAS*\nConstrução: ${L("grp-q4")}\nÁrea: ${areaFmt}\n`;
+          msg += `Quartos: ${L("grp-q6-qtos")} | Suítes: ${L("grp-q6-suits")} | Garagem: ${L("grp-q6-gar")}\n`;
+          if (A["grp-q6-tel"]) msg += `Telhado: ${L("grp-q6-tel")}\n`;
+          const ext = A["grp-q6-ext"];
+          if (ext && ext.length)
+            msg += `Extras: ${ext.map((v) => LBL["grp_q6_ext"]?.[v] || v).join(", ")}\n`;
+          msg += `\n`;
+        } else {
+          msg += `*CARACTERÍSTICAS*\nTipo de uso: ${L("grp-qc3")}\nÁrea: ${areaFmt}\nPavimentos: ${L("grp-qc5")}\n`;
+          const carac = A["grp-qc6"];
+          if (carac && carac.length)
+            msg += `Características: ${carac.map((v) => LBL["grp_qc6"]?.[v] || v).join(", ")}\n`;
+          msg += `\n`;
+        }
+
+        if (desc) msg += `*PROJETO IDEALIZADO*\n${desc}\n\n`;
+
+        msg += `*FASE & PRAZO*\nMomento: ${L("grp-q7")}\nInício previsto: ${prazoFmt}\n\n`;
+        msg += `*RECURSOS*\nFinanciamento: ${L("grp-q8")}`;
+        if (A["grp-q8"] === "sim") msg += ` — ${bancoFmt}`;
+        msg += `\n\n`;
+        msg += `*SERVIÇOS*\nComplementares: ${L("grp-q9")}\n`;
+        if (A.q1 === "residencial")
+          msg += `Interiores: ${L("grp-interiores")}\n`;
+        const out = A["grp-q11"];
+        if (out && out.length)
+          msg += `Outros: ${out.map((v) => LBL.grp_q11?.[v] || v).join(", ")}\n`;
+        msg += `\n`;
+        msg += `*EXPECTATIVA*\n${exp}\n\n`;
+        msg += `━━━━━━━━━━━━━━━━━━━━━━`;
+
+        // ── CRM lead_completed ────────────────────────────────────
+        postCRM({
+          tipo: "lead_completed",
+          ts: ts(),
+          nome,
+          whats,
+          email,
+          nasc,
+          estado: A.q_estado || "—",
+          cidade: A.q_cidade || "—",
+          tipo_projeto: A.q1,
+          objetivo: getObj(),
+          terreno: L("grp-q3"),
+          terreno_tamanho: terFmt,
+          tipo_construcao: L("grp-q4"),
+          area: areaFmt,
+          quartos: L("grp-q6-qtos"),
+          suites: L("grp-q6-suits"),
+          garagem: L("grp-q6-gar"),
+          telhado: L("grp-q6-tel"),
+          extras: L("grp-q6-ext"),
+          tipo_uso_com: L("grp-qc3"),
+          pavimentos: L("grp-qc5"),
+          carac_com: L("grp-qc6"),
+          estilo: L("grp-q6b"),
+          estilo_referencia:
+            document.getElementById("q6b_ref")?.value.trim() || "",
+          descricao_projeto: desc,
+          fase: L("grp-q7"),
+          prazo: prazoFmt,
+          financiamento: L("grp-q8"),
+          banco: bancoFmt,
+          planilha_banco_requerida: planilhaBanco(),
+          complementares: L("grp-q9"),
+          interiores: L("grp-interiores"),
+          outros_servicos: L("grp-q11"),
+          intencao: L("grp-q13"),
+          canal: L("grp-q14-canal"),
+          origem: origemFmt,
+          conjuge: conjNome || "—",
+          expectativa: exp,
+          score: cl.score,
+          classificacao: cl.badge,
+          responsavel: cl.owner,
+          regras_disparadas: cl.regras,
+        });
+
+        // ── Sucesso ───────────────────────────────────────────────
+        document.getElementById("full-form").classList.remove("visible");
+        const first = nome.split(" ")[0];
+        const msgs = {
+          agendar: `Obrigado, <strong style="color:var(--accent)">${first}</strong>. Nossa equipe entrará em contato para agendar a reunião em até 24 horas.`,
+          proposta: `Obrigado, <strong style="color:var(--accent)">${first}</strong>. Vamos preparar uma proposta e enviar pelo WhatsApp em até 24 horas.`,
+          entender: `Obrigado, <strong style="color:var(--accent)">${first}</strong>. Nossa equipe recebeu suas informações e entrará em contato em até 24 horas.`,
+        };
+        document.getElementById("s-text").innerHTML =
+          msgs[A["grp-q13"]] || msgs.entender;
+        document.getElementById("success-screen").classList.add("visible");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        const url = `https://wa.me/${NUMERO_AQ}?text=${encodeURIComponent(msg)}`;
+        setTimeout(() => window.open(url, "_blank"), 800);
+      }
+
+      function submitQuick() {
+        const nome = document.getElementById("q_nome_quick").value.trim();
+        const whats = document.getElementById("q_whats_quick").value.trim();
+        const msgTxt = document.getElementById("q_msg_quick").value.trim();
+        if (!nome) return shake("q_nome_quick");
+        if (!whats) return shake("q_whats_quick");
+        if (!msgTxt) return shake("q_msg_quick");
+        let msg = `*CONTATO RÁPIDO — AQ ENGENHARIA*\n━━━━━━━━━━━━━━━━━━━━━━\n\nNome: ${nome}\nWhatsApp: ${whats}\n\nMensagem:\n${msgTxt}`;
+        postCRM({
+          tipo: "contato_rapido",
+          ts: ts(),
+          nome,
+          whats,
+          mensagem: msgTxt,
+        });
+        document.getElementById("quick-form").classList.remove("visible");
+        const first = nome.split(" ")[0];
+        document.getElementById("s-text").innerHTML =
+          `Obrigado, <strong style="color:var(--accent)">${first}</strong>. Nossa equipe recebeu sua mensagem e entrará em contato em até 24 horas.`;
+        document.getElementById("success-screen").classList.add("visible");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(
+          () =>
+            window.open(
+              `https://wa.me/${NUMERO_AQ}?text=${encodeURIComponent(msg)}`,
+              "_blank",
+            ),
+          800,
+        );
+      }
+
+      /* ── UTILS ─────────────────────────────────────────────────── */
+      function shake(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.animation = "none";
+        el.offsetHeight;
+        el.style.animation = "shake 0.38s ease";
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => (el.style.animation = ""), 400);
+      }
+      function maskPhone(el) {
+        let v = el.value.replace(/\D/g, "").slice(0, 11);
+        if (v.length > 6)
+          v = "(" + v.slice(0, 2) + ") " + v.slice(2, 7) + "-" + v.slice(7);
+        else if (v.length > 2) v = "(" + v.slice(0, 2) + ") " + v.slice(2);
+        else if (v.length > 0) v = "(" + v;
+        el.value = v;
+      }
+    </script>
+  </body>
+</html>

@@ -44,7 +44,7 @@ import imgTestimonial1 from "../assets/imgs/testimonials/deposition1.webp";
 import imgTestimonial2 from "../assets/imgs/testimonials/deposition2.webp";
 import imgTestimonial3 from "../assets/imgs/testimonials/deposition3.webp";
 import imgTestimonial4 from "../assets/imgs/testimonials/deposition4.webp";
-import { Briefcase, Gavel } from "lucide-react";
+import { Briefcase, Gavel, Search } from "lucide-react";
 import { Users } from "lucide-react";
 import { FileText } from "lucide-react";
 import imgNews1 from "../assets/imgs/news/imgNews1.webp";
@@ -202,6 +202,32 @@ const content = {
         slide3: {
           img: {},
           alt: "",
+        },
+      },
+    },
+    solutions: {
+      miniTag: "Soluções Rápidas",
+      title: "Resolva etapas importantes do seu projeto com agilidade",
+      subtitle:
+        " Acesse nossos serviços especializados para regularização e análise técnica, com praticidade e segurança desde o primeiro passo.",
+      cards: {
+        card1: {
+          icon: (
+            <>
+              <FileText width={18} />
+            </>
+          ),
+          label: "Regularizar INSS da obra",
+          link: "./inss.html",
+        },
+        card2: {
+          icon: (
+            <>
+              <Search width={18} />
+            </>
+          ),
+          label: "Fazer diagnóstico de projeto",
+          link: "./leads.html",
         },
       },
     },

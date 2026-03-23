@@ -1,0 +1,2470 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>INSS de Obra — Alves e Queiroz</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --dark: #1c2b3a;
+        --darker: #111d28;
+        --accent: #c9a84c;
+        --accent2: #e8c96a;
+        --light: #f4f1ec;
+        --muted: #8a9baa;
+        --white: #ffffff;
+        --surf: #233244;
+        --bdr: rgba(201, 168, 76, 0.2);
+        --r: 4px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--darker);
+        color: var(--light);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .wrap {
+        position: relative;
+        z-index: 1;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 24px 80px;
+      }
+
+      /* HEADER */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 28px 0 24px;
+        border-bottom: 1px solid var(--bdr);
+        margin-bottom: 52px;
+      }
+      .logo {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        letter-spacing: 0.18em;
+        color: var(--accent);
+        text-transform: uppercase;
+      }
+      .logo span {
+        color: var(--muted);
+        font-style: italic;
+      }
+      .grazi-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(201, 168, 76, 0.08);
+        border: 1px solid var(--bdr);
+        border-radius: 20px;
+        padding: 6px 14px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .grazi-badge strong {
+        color: var(--accent);
+      }
+
+      /* HERO */
+      .hero {
+        margin-bottom: 48px;
+      }
+      .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .eyebrow::before {
+        content: "";
+        display: block;
+        width: 24px;
+        height: 1px;
+        background: var(--accent);
+      }
+      .hero h1 {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(32px, 5vw, 48px);
+        font-weight: 300;
+        line-height: 1.1;
+        color: var(--white);
+        margin-bottom: 18px;
+      }
+      .hero h1 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .hero p {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 500px;
+      }
+
+      /* INFO STRIP */
+      .info-strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 48px;
+      }
+      @media (max-width: 500px) {
+        .info-strip {
+          grid-template-columns: 1fr;
+        }
+      }
+      .info-item {
+        background: var(--surf);
+        border: 1px solid var(--bdr);
+        border-radius: var(--r);
+        padding: 16px;
+        text-align: center;
+      }
+      .info-item .val {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 22px;
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .info-item .lbl {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      /* PROGRESS */
+      .prog-wrap {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 36px;
+      }
+      .prog-bar {
+        flex: 1;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .prog-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 2px;
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .prog-lbl {
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      /* STEPS */
+      .step {
+        display: none;
+      }
+      .step.active {
+        display: block;
+        animation: fadeUp 0.35s ease;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .step-hdr {
+        margin-bottom: 28px;
+      }
+      .step-num {
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 8px;
+      }
+      .step-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 26px;
+        font-weight: 400;
+        color: var(--white);
+        line-height: 1.2;
+        margin-bottom: 6px;
+      }
+      .step-hint {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.6;
+        text-align: justify;
+      }
+
+      /* OPTIONS */
+      .opts {
+        display: grid;
+        gap: 9px;
+        margin-bottom: 28px;
+      }
+      .opts.c2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .opts.c3 {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      @media (max-width: 480px) {
+        .opts.c2,
+        .opts.c3 {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .opt {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--r);
+        cursor: pointer;
+        transition: all 0.15s;
+        user-select: none;
+      }
+      .opt:hover {
+        border-color: rgba(201, 168, 76, 0.4);
+        background: rgba(201, 168, 76, 0.04);
+      }
+      .opt.sel {
+        border-color: var(--accent);
+        background: rgba(201, 168, 76, 0.08);
+      }
+      .chk {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        margin-top: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+      }
+      .opt.sel .chk {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .opt.sel .chk::after {
+        content: "";
+        display: block;
+        width: 6px;
+        height: 6px;
+        background: var(--darker);
+        border-radius: 50%;
+      }
+      .multi .chk {
+        border-radius: 3px;
+      }
+      .multi.sel .chk::after {
+        content: "✓";
+        font-size: 10px;
+        color: var(--darker);
+        font-weight: 700;
+        line-height: 1;
+      }
+      .opt-lbl {
+        font-size: 14px;
+        color: var(--light);
+        line-height: 1.4;
+      }
+      .opt-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+        line-height: 1.4;
+      }
+
+      /* FIELDS */
+      .field {
+        margin-bottom: 18px;
+      }
+      .field label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 7px;
+      }
+      .field input,
+      .field textarea,
+      .field select {
+        width: 100%;
+        padding: 13px 15px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--r);
+        color: var(--white);
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s;
+        -webkit-appearance: none;
+      }
+      .field select {
+        cursor: pointer;
+      }
+      .field select option {
+        background: var(--dark);
+        color: var(--white);
+      }
+      .field input:focus,
+      .field textarea:focus,
+      .field select:focus {
+        border-color: var(--accent);
+        background: rgba(201, 168, 76, 0.04);
+      }
+      .field input::placeholder,
+      .field textarea::placeholder {
+        color: var(--muted);
+      }
+      .field textarea {
+        resize: vertical;
+        min-height: 90px;
+        line-height: 1.6;
+      }
+      .frow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 480px) {
+        .frow {
+          grid-template-columns: 1fr;
+        }
+      }
+      .fopt {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      /* INFO BOX */
+      .ibox {
+        background: rgba(201, 168, 76, 0.06);
+        border-left: 3px solid var(--accent);
+        border-radius: 0 var(--r) var(--r) 0;
+        padding: 14px 16px;
+        margin-bottom: 24px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.7;
+        text-align: justify;
+      }
+      .ibox strong {
+        color: var(--accent);
+      }
+
+      /* ALERT BOX */
+      .abox {
+        background: rgba(34, 197, 94, 0.06);
+        border-left: 3px solid #22c55e;
+        border-radius: 0 var(--r) var(--r) 0;
+        padding: 14px 16px;
+        margin-bottom: 24px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.7;
+        text-align: justify;
+      }
+      .abox strong {
+        color: #4ade80;
+      }
+
+      /* URGENT BOX */
+      .urgbox {
+        background: rgba(239, 68, 68, 0.08);
+        border-left: 3px solid #ef4444;
+        border-radius: 0 var(--r) var(--r) 0;
+        padding: 14px 16px;
+        margin-bottom: 24px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.7;
+        text-align: justify;
+      }
+      .urgbox strong {
+        color: #f87171;
+      }
+
+      .date-wrap {
+        display: flex;
+        gap: 10px;
+      }
+      .date-sel {
+        flex: 1;
+        padding: 12px 14px;
+        background: var(--card);
+        border: 1px solid var(--bdr);
+        border-radius: var(--r);
+        color: var(--light);
+        font-size: 14px;
+        font-family: inherit;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 32px;
+        transition: border-color 0.2s;
+      }
+      .date-sel:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .date-sel option {
+        background: #1e1a16;
+        color: var(--light);
+      }
+
+      .cond {
+        display: none;
+      }
+      .cond.show {
+        display: block;
+        animation: fadeUp 0.3s ease;
+      }
+
+      /* SECTION LABEL */
+      .sec-lbl {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+
+      /* BUTTONS */
+      .btn-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-top: 28px;
+      }
+      .btn {
+        padding: 13px 26px;
+        border: none;
+        border-radius: var(--r);
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-p {
+        background: var(--accent);
+        color: var(--darker);
+        flex: 1;
+      }
+      .btn-p:hover {
+        background: var(--accent2);
+        transform: translateY(-1px);
+      }
+      .btn-p:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-g {
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .btn-g:hover {
+        color: var(--light);
+        border-color: rgba(255, 255, 255, 0.25);
+      }
+
+      /* SUCCESS */
+      .success {
+        text-align: center;
+        padding: 60px 0;
+        display: none;
+      }
+      .success.show {
+        display: block;
+        animation: fadeUp 0.5s ease;
+      }
+      .s-icon {
+        width: 64px;
+        height: 64px;
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        font-size: 22px;
+      }
+      .s-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 36px;
+        font-weight: 400;
+        color: var(--white);
+        margin-bottom: 14px;
+      }
+      .s-text {
+        font-size: 15px;
+        color: var(--muted);
+        line-height: 1.7;
+        max-width: 420px;
+        margin: 0 auto 28px;
+      }
+      .s-card {
+        display: inline-block;
+        background: rgba(201, 168, 76, 0.08);
+        border: 1px solid var(--bdr);
+        border-radius: var(--r);
+        padding: 16px 24px;
+        font-size: 13px;
+        color: var(--muted);
+        text-align: left;
+      }
+      .s-card strong {
+        color: var(--accent);
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      /* FOOTER */
+      footer {
+        margin-top: 72px;
+        padding-top: 28px;
+        border-top: 1px solid var(--bdr);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      footer .fb {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      footer .fc {
+        font-size: 12px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- HEADER -->
+      <header>
+        <div class="logo">
+          Alves e Queiroz <span>· Engenharia | Arquitetura</span>
+        </div>
+        <div class="grazi-badge">
+          👩‍💼 Especialista: <strong>Grazielle</strong>
+        </div>
+      </header>
+
+      <!-- HERO -->
+      <div class="hero" id="hero">
+        <div class="eyebrow">INSS de Obra</div>
+        <h1>Regularize o INSS<br />da sua <em>obra agora.</em></h1>
+        <p>
+          Responda algumas perguntas técnicas e nossa especialista Grazielle
+          analisa sua situação e entra em contato com o diagnóstico completo.
+        </p>
+      </div>
+
+      <!-- INFO STRIP -->
+      <div class="info-strip">
+        <div class="info-item">
+          <div class="val">🏢</div>
+          <div class="lbl">Presencial ou digital</div>
+        </div>
+        <div class="info-item">
+          <div class="val">24h</div>
+          <div class="lbl">Resposta garantida</div>
+        </div>
+        <div class="info-item">
+          <div class="val">+</div>
+          <div class="lbl">Averbação na matrícula</div>
+        </div>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="prog-wrap" id="prog-wrap">
+        <div class="prog-bar">
+          <div class="prog-fill" id="prog-fill" style="width: 0%"></div>
+        </div>
+        <div class="prog-lbl" id="prog-lbl">Etapa 1 de 5</div>
+      </div>
+
+      <!-- ══════════════════════════════════
+       ETAPA 1 — DADOS DO CLIENTE
+  ══════════════════════════════════ -->
+      <div class="step active" id="s1">
+        <div class="step-hdr">
+          <div class="step-num">Etapa 1 — Identificação</div>
+          <h2 class="step-title">Dados do cliente</h2>
+          <p class="step-hint">
+            A obra foi realizada por pessoa física ou jurídica? Isso impacta
+            diretamente o cálculo e as possibilidades de redução.
+          </p>
+        </div>
+
+        <div class="sec-lbl">Tipo de pessoa</div>
+        <div
+          class="opts c2"
+          id="q_pessoa"
+          style="margin-bottom: 14px"
+          onchange=""
+        >
+          <div
+            class="opt"
+            data-val="fisica"
+            onclick="
+              sel(this, 'q_pessoa');
+              togglePessoa('fisica');
+            "
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Pessoa Física</div>
+              <div class="opt-sub">CPF do proprietário</div>
+            </div>
+          </div>
+          <div
+            class="opt"
+            data-val="juridica"
+            onclick="
+              sel(this, 'q_pessoa');
+              togglePessoa('juridica');
+            "
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Pessoa Jurídica</div>
+              <div class="opt-sub">CNPJ da empresa</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerta PJ -->
+        <div class="cond urgbox" id="pj-alert" style="margin-bottom: 20px">
+          ⚠️ <strong>Atenção:</strong> a redução do INSS para pessoa jurídica é
+          menos vantajosa que para pessoa física. Além disso, é fundamental que
+          o imóvel e o alvará estejam no mesmo nome — se o imóvel está na pessoa
+          física mas o alvará foi emitido em nome da empresa, isso gera conflito
+          junto à Receita Federal. Informe essa situação no campo de observações
+          no final do formulário.
+        </div>
+
+        <div class="frow">
+          <div class="field">
+            <label>Nome completo / Razão Social *</label>
+            <input
+              type="text"
+              id="q_nome"
+              placeholder="Nome do proprietário ou empresa"
+            />
+          </div>
+          <div class="field">
+            <label>CPF / CNPJ *</label>
+            <input
+              type="text"
+              id="q_doc"
+              placeholder="000.000.000-00 ou 00.000.000/0001-00"
+              oninput="maskDoc(this)"
+              maxlength="18"
+            />
+          </div>
+        </div>
+
+        <div class="frow">
+          <div class="field">
+            <label>WhatsApp *</label>
+            <input
+              type="tel"
+              id="q_whats"
+              placeholder="(00) 00000-0000"
+              oninput="maskPhone(this)"
+            />
+          </div>
+          <div class="field">
+            <label>E-mail <span class="fopt">(opcional)</span></label>
+            <input type="email" id="q_email" placeholder="seu@email.com" />
+          </div>
+        </div>
+
+        <!-- Notificação Receita Federal -->
+        <div class="sec-lbl" style="margin-top: 8px">
+          Você recebeu notificação da Receita Federal sobre essa obra?
+        </div>
+        <div class="opts c2" id="q_notif" style="margin-bottom: 14px">
+          <div
+            class="opt"
+            data-val="sim"
+            onclick="
+              sel(this, 'q_notif');
+              toggleNotif('sim');
+            "
+          >
+            <div class="chk"></div>
+            <div><div class="opt-lbl">Sim, fui notificado</div></div>
+          </div>
+          <div
+            class="opt"
+            data-val="nao"
+            onclick="
+              sel(this, 'q_notif');
+              toggleNotif('nao');
+            "
+          >
+            <div class="chk"></div>
+            <div><div class="opt-lbl">Não recebi notificação</div></div>
+          </div>
+        </div>
+
+        <!-- Alerta notificação -->
+        <div class="cond urgbox" id="notif-alert">
+          🚨 <strong>Situação urgente.</strong> Notificações da Receita Federal
+          geralmente vêm com prazo para regularização — após esse prazo, incidem
+          multas adicionais e o processo pode ser encaminhado para cobrança.
+          Informe a data limite da notificação no campo de observações no final
+          do formulário. Nossa especialista dará prioridade ao seu atendimento.
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-p" onclick="go(1)">Continuar →</button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+       ETAPA 2 — TIPO E LOCAL DA OBRA
+  ══════════════════════════════════ -->
+      <div class="step" id="s2">
+        <div class="step-hdr">
+          <div class="step-num">Etapa 2 — Tipo e Local</div>
+          <h2 class="step-title">Qual é o tipo da obra e onde ela fica?</h2>
+        </div>
+
+        <div class="sec-lbl">Tipo de edificação</div>
+        <div class="opts" id="q_tipo" style="margin-bottom: 28px">
+          <div class="opt" data-val="unifamiliar" onclick="sel(this, 'q_tipo')">
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Residencial Unifamiliar</div>
+              <div class="opt-sub">Casa para uma família</div>
+            </div>
+          </div>
+          <div
+            class="opt"
+            data-val="multifamiliar"
+            onclick="sel(this, 'q_tipo')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Residencial Multifamiliar</div>
+              <div class="opt-sub">
+                Apartamentos, kitinetes, casas geminadas
+              </div>
+            </div>
+          </div>
+          <div class="opt" data-val="comercial" onclick="sel(this, 'q_tipo')">
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Comercial</div>
+              <div class="opt-sub">Loja, escritório, clínica, restaurante</div>
+            </div>
+          </div>
+          <div class="opt" data-val="galpao" onclick="sel(this, 'q_tipo')">
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Galpão / Industrial</div>
+              <div class="opt-sub">Armazém, depósito, indústria</div>
+            </div>
+          </div>
+          <div class="opt" data-val="popular" onclick="sel(this, 'q_tipo')">
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Casa Popular</div>
+              <div class="opt-sub">Até 70 m² — regime especial de cálculo</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="frow">
+          <div class="field">
+            <label>Estado onde a obra foi realizada *</label>
+            <select id="q_estado" onchange="updateCidades(this.value)">
+              <option value="">Selecione o estado...</option>
+              <option>Acre</option>
+              <option>Alagoas</option>
+              <option>Amapá</option>
+              <option>Amazonas</option>
+              <option>Bahia</option>
+              <option>Ceará</option>
+              <option>Distrito Federal</option>
+              <option>Espírito Santo</option>
+              <option>Goiás</option>
+              <option>Maranhão</option>
+              <option>Mato Grosso</option>
+              <option>Mato Grosso do Sul</option>
+              <option>Minas Gerais</option>
+              <option>Pará</option>
+              <option>Paraíba</option>
+              <option>Paraná</option>
+              <option>Pernambuco</option>
+              <option>Piauí</option>
+              <option>Rio de Janeiro</option>
+              <option>Rio Grande do Norte</option>
+              <option>Rio Grande do Sul</option>
+              <option>Rondônia</option>
+              <option>Roraima</option>
+              <option>Santa Catarina</option>
+              <option>São Paulo</option>
+              <option>Sergipe</option>
+              <option>Tocantins</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Cidade *</label>
+            <select id="q_cidade">
+              <option value="">Selecione o estado primeiro...</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-g" onclick="back(2)">← Voltar</button>
+          <button class="btn btn-p" onclick="go(2)">Continuar →</button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+       ETAPA 3 — SITUAÇÃO DA OBRA
+  ══════════════════════════════════ -->
+      <div class="step" id="s3">
+        <div class="step-hdr">
+          <div class="step-num">Etapa 3 — Situação da Obra</div>
+          <h2 class="step-title">Em que situação a obra se encontra?</h2>
+        </div>
+
+        <div class="sec-lbl">Status atual</div>
+        <div class="opts" id="q_status" style="margin-bottom: 28px">
+          <div
+            class="opt"
+            data-val="nao-iniciada"
+            onclick="
+              sel(this, 'q_status');
+              toggleStatus('nao-iniciada');
+            "
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Não iniciada</div>
+              <div class="opt-sub">A obra ainda não começou</div>
+            </div>
+          </div>
+          <div
+            class="opt"
+            data-val="andamento"
+            onclick="
+              sel(this, 'q_status');
+              toggleStatus('andamento');
+            "
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Em andamento</div>
+              <div class="opt-sub">A obra já começou mas não foi concluída</div>
+            </div>
+          </div>
+          <div
+            class="opt"
+            data-val="concluida"
+            onclick="
+              sel(this, 'q_status');
+              toggleStatus('concluida');
+            "
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Concluída</div>
+              <div class="opt-sub">A obra já foi finalizada</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Datas — só aparece se não for "não iniciada" -->
+        <div class="cond" id="datas-block">
+          <div class="frow">
+            <div class="field">
+              <label>Data de início da obra *</label>
+              <div class="date-wrap" id="q_inicio">
+                <select
+                  class="date-sel"
+                  id="q_inicio_mes"
+                  onchange="syncData('inicio')"
+                >
+                  <option value="">Mês</option>
+                  <option value="01">Janeiro</option>
+                  <option value="02">Fevereiro</option>
+                  <option value="03">Março</option>
+                  <option value="04">Abril</option>
+                  <option value="05">Maio</option>
+                  <option value="06">Junho</option>
+                  <option value="07">Julho</option>
+                  <option value="08">Agosto</option>
+                  <option value="09">Setembro</option>
+                  <option value="10">Outubro</option>
+                  <option value="11">Novembro</option>
+                  <option value="12">Dezembro</option>
+                </select>
+                <select
+                  class="date-sel"
+                  id="q_inicio_ano"
+                  onchange="syncData('inicio')"
+                >
+                  <option value="">Ano</option>
+                </select>
+              </div>
+              <input type="hidden" id="q_inicio_val" />
+            </div>
+            <div class="field" id="termino-field">
+              <label
+                >Data de término
+                <span class="fopt" id="termino-opt">(opcional)</span></label
+              >
+              <div class="date-wrap" id="q_termino">
+                <select
+                  class="date-sel"
+                  id="q_termino_mes"
+                  onchange="syncData('termino')"
+                >
+                  <option value="">Mês</option>
+                  <option value="01">Janeiro</option>
+                  <option value="02">Fevereiro</option>
+                  <option value="03">Março</option>
+                  <option value="04">Abril</option>
+                  <option value="05">Maio</option>
+                  <option value="06">Junho</option>
+                  <option value="07">Julho</option>
+                  <option value="08">Agosto</option>
+                  <option value="09">Setembro</option>
+                  <option value="10">Outubro</option>
+                  <option value="11">Novembro</option>
+                  <option value="12">Dezembro</option>
+                </select>
+                <select
+                  class="date-sel"
+                  id="q_termino_ano"
+                  onchange="syncData('termino')"
+                >
+                  <option value="">Ano</option>
+                </select>
+              </div>
+              <input type="hidden" id="q_termino_val" />
+            </div>
+          </div>
+          <div class="ibox" style="margin-top: 4px; font-size: 12px">
+            💡 Caso não lembre o mês exato, informe apenas o ano — nosso
+            especialista vai considerar isso na análise.
+          </div>
+        </div>
+
+        <!-- Condicional: obra não iniciada -->
+        <div class="cond" id="nao-iniciada-block">
+          <div class="ibox">
+            💡 <strong>Planejamento antecipado:</strong> regularizar o INSS
+            antes ou durante a obra evita acúmulo de débitos e facilita a
+            averbação no futuro. Nossa especialista pode orientar sobre o melhor
+            momento para iniciar o processo.
+          </div>
+        </div>
+
+        <!-- Condicional: obra concluída -->
+        <div class="cond" id="concluida-block">
+          <div class="ibox" id="decadencia-msg">
+            💡 <strong>Atenção — possível decadência:</strong> obras concluídas
+            há mais de 5 anos podem estar em prazo decadencial, o que pode
+            <strong>reduzir ou eliminar</strong> o valor do INSS a pagar.
+            Informe a data de término acima para que nossa especialista
+            verifique.
+          </div>
+        </div>
+
+        <!-- Documentação -->
+        <div class="sec-lbl">Documentação disponível</div>
+        <div class="opts" id="q_docs" style="margin-bottom: 14px">
+          <div
+            class="opt"
+            data-val="alvara-projeto"
+            onclick="
+              sel(this, 'q_docs');
+              toggleDocs('alvara-projeto');
+            "
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Possui alvará e projeto aprovado</div>
+              <div class="opt-sub">Documentação completa em ordem</div>
+            </div>
+          </div>
+          <div
+            class="opt"
+            data-val="so-projeto"
+            onclick="
+              sel(this, 'q_docs');
+              toggleDocs('outro');
+            "
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Possui apenas o projeto</div>
+              <div class="opt-sub">Sem alvará ou com alvará vencido</div>
+            </div>
+          </div>
+          <div
+            class="opt"
+            data-val="sem-documentacao"
+            onclick="
+              sel(this, 'q_docs');
+              toggleDocs('outro');
+            "
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Sem projeto e sem alvará</div>
+              <div class="opt-sub">Precisa regularizar a documentação</div>
+            </div>
+          </div>
+          <div
+            class="opt"
+            data-val="nao-sei"
+            onclick="
+              sel(this, 'q_docs');
+              toggleDocs('outro');
+            "
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Não sei o que tenho</div>
+              <div class="opt-sub">Nossa especialista vai orientar</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerta alinhamento PF/PJ no alvará -->
+        <div class="cond ibox" id="alvara-alert" style="margin-bottom: 24px">
+          💡 <strong>Ponto de atenção:</strong> o alvará deve estar no mesmo
+          nome do proprietário do imóvel. Se o imóvel está em nome de uma pessoa
+          física mas o alvará foi emitido em nome de uma empresa (ou
+          vice-versa), isso gera conflito junto à Receita Federal — que é
+          comunicada pela prefeitura com base nos dados do alvará. Informe essa
+          situação no campo de observações no final do formulário.
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-g" onclick="back(3)">← Voltar</button>
+          <button class="btn btn-p" onclick="go(3)">Continuar →</button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+       ETAPA 4 — CARACTERÍSTICAS TÉCNICAS
+  ══════════════════════════════════ -->
+      <div class="step" id="s4">
+        <div class="step-hdr">
+          <div class="step-num">Etapa 4 — Características Técnicas</div>
+          <h2 class="step-title">Detalhes da construção</h2>
+          <p class="step-hint">
+            Essas informações impactam diretamente o valor do INSS calculado.
+          </p>
+        </div>
+
+        <div class="frow">
+          <div class="field">
+            <label>Metragem total da obra (m²) *</label>
+            <input type="number" id="q_m2" placeholder="Ex: 120" min="1" />
+          </div>
+          <div class="field">
+            <label>Número de pavimentos</label>
+            <select id="q_pav">
+              <option value="">Selecione...</option>
+              <option value="1">Térreo (1 pavimento)</option>
+              <option value="2">2 pavimentos</option>
+              <option value="3">3 pavimentos</option>
+              <option value="4+">4 ou mais pavimentos</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="ibox">
+          <strong>Por que a metragem importa?</strong> O INSS de obra é
+          calculado sobre o custo estimado da construção (CUB), que é
+          multiplicado pela metragem. Quanto mais preciso o dado, mais exato o
+          diagnóstico.
+        </div>
+
+        <div class="sec-lbl">
+          Materiais e técnicas utilizados — marque todos que se aplicam
+        </div>
+        <div class="opts" id="q_materiais" style="margin-bottom: 16px">
+          <div
+            class="opt multi"
+            data-val="pre-moldado"
+            onclick="tog(this, 'q_materiais')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Pré-moldado como elemento estrutural</div>
+              <div class="opt-sub">
+                Pilares, vigas ou paredes estruturais pré-fabricados fora do
+                canteiro
+              </div>
+            </div>
+          </div>
+          <div
+            class="opt multi"
+            data-val="estrutura-metalica"
+            onclick="tog(this, 'q_materiais')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">
+                Estrutura metálica como elemento estrutural
+              </div>
+              <div class="opt-sub">
+                Pilares e vigas de aço como estrutura principal da edificação
+              </div>
+            </div>
+          </div>
+          <div
+            class="opt multi"
+            data-val="concreto-usinado"
+            onclick="tog(this, 'q_materiais')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Concreto usinado (concreteira)</div>
+              <div class="opt-sub">
+                Fornecido por empresa especializada — nota fiscal em nome da
+                obra
+              </div>
+            </div>
+          </div>
+          <div
+            class="opt multi"
+            data-val="nenhum"
+            onclick="tog(this, 'q_materiais')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Nenhum dos acima</div>
+              <div class="opt-sub">
+                Construção convencional — alvenaria e estrutura moldada no local
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ibox">
+          <strong>Por que isso importa?</strong> Pré-moldados e estrutura
+          metálica só geram <strong>crédito de INSS</strong> quando utilizados
+          como <strong>elementos estruturais</strong> — pilares, vigas ou
+          paredes estruturais. Uso apenas como fechamento ou acabamento não é
+          dedutível. O concreto usinado de concreteira também gera crédito
+          quando comprovado por nota fiscal.
+        </div>
+
+        <div class="sec-lbl">A obra possui piscina?</div>
+        <div class="opts c2" id="q_piscina" style="margin-bottom: 28px">
+          <div class="opt" data-val="sim" onclick="sel(this, 'q_piscina')">
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Sim</div>
+              <div class="opt-sub">Piscina integrada à obra</div>
+            </div>
+          </div>
+          <div class="opt" data-val="nao" onclick="sel(this, 'q_piscina')">
+            <div class="chk"></div>
+            <div><div class="opt-lbl">Não</div></div>
+          </div>
+        </div>
+
+        <div class="sec-lbl">
+          Você possui notas fiscais relacionadas à obra?
+        </div>
+        <div class="opts c2" id="q_notas" style="margin-bottom: 14px">
+          <div
+            class="opt"
+            data-val="sim"
+            onclick="
+              sel(this, 'q_notas');
+              toggleNotas('sim');
+            "
+          >
+            <div class="chk"></div>
+            <div><div class="opt-lbl">Sim, tenho notas fiscais</div></div>
+          </div>
+          <div
+            class="opt"
+            data-val="nao"
+            onclick="
+              sel(this, 'q_notas');
+              toggleNotas('nao');
+            "
+          >
+            <div class="chk"></div>
+            <div><div class="opt-lbl">Não tenho notas fiscais</div></div>
+          </div>
+          <div
+            class="opt"
+            data-val="parcial"
+            onclick="
+              sel(this, 'q_notas');
+              toggleNotas('sim');
+            "
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Tenho algumas</div>
+              <div class="opt-sub">Parte das notas foi guardada</div>
+            </div>
+          </div>
+          <div
+            class="opt"
+            data-val="nao-sei-notas"
+            onclick="
+              sel(this, 'q_notas');
+              toggleNotas('nao');
+            "
+          >
+            <div class="chk"></div>
+            <div><div class="opt-lbl">Não sei</div></div>
+          </div>
+        </div>
+
+        <div class="cond ibox" id="notas-info">
+          💡 <strong>Requisitos para as notas gerarem redução:</strong> apenas
+          notas de <strong>mão de obra ou prestação de serviço</strong> são
+          dedutíveis. Notas de material de construção não reduzem o INSS. Para
+          pré-moldados, estrutura metálica e concreto usinado, a nota precisa:
+          (1) mencionar o endereço da obra, (2) estar em nome de um dos
+          proprietários, e (3) descrever claramente o serviço prestado àquela
+          obra. Nossa especialista vai orientar sobre quais notas são
+          aproveitáveis.
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-g" onclick="back(4)">← Voltar</button>
+          <button class="btn btn-p" onclick="go(4)">Continuar →</button>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+       ETAPA 5 — OBJETIVO E CONTATO
+  ══════════════════════════════════ -->
+      <div class="step" id="s5">
+        <div class="step-hdr">
+          <div class="step-num">Etapa 5 — Objetivo</div>
+          <h2 class="step-title">O que você precisa fazer com essa obra?</h2>
+          <p class="step-hint">
+            Isso define o escopo do serviço que vamos oferecer.
+          </p>
+        </div>
+
+        <div class="sec-lbl">Objetivo principal — pode marcar mais de um</div>
+        <div class="opts" id="q_obj" style="margin-bottom: 28px">
+          <div
+            class="opt multi"
+            data-val="acompanhamento-obra"
+            onclick="tog(this, 'q_obj')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">
+                Acompanhamento e planejamento durante a obra
+              </div>
+              <div class="opt-sub">
+                Pagamento mensal parcelado das guias — obra não iniciada ou
+                recém iniciada
+              </div>
+            </div>
+          </div>
+          <div
+            class="opt multi"
+            data-val="regularizar-inss"
+            onclick="tog(this, 'q_obj')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Regularizar o INSS de obra já concluída</div>
+              <div class="opt-sub">
+                Emitir a CND (Certidão Negativa de Débitos)
+              </div>
+            </div>
+          </div>
+          <div
+            class="opt multi"
+            data-val="averbar"
+            onclick="tog(this, 'q_obj')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Averbar a construção na matrícula</div>
+              <div class="opt-sub">
+                Registrar oficialmente no Cartório de Imóveis
+              </div>
+            </div>
+          </div>
+          <div
+            class="opt multi"
+            data-val="vender-financiado"
+            onclick="tog(this, 'q_obj')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Viabilizar venda com financiamento</div>
+              <div class="opt-sub">
+                Comprador precisa de imóvel regular para financiar
+              </div>
+            </div>
+          </div>
+          <div
+            class="opt multi"
+            data-val="reduzir"
+            onclick="tog(this, 'q_obj')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Reduzir o valor do INSS</div>
+              <div class="opt-sub">
+                Calcular créditos e deduções disponíveis
+              </div>
+            </div>
+          </div>
+          <div
+            class="opt multi"
+            data-val="notificacao-rf"
+            onclick="tog(this, 'q_obj')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">
+                Responder notificação da Receita Federal
+              </div>
+              <div class="opt-sub">
+                Com prazo para regularização — situação urgente
+              </div>
+            </div>
+          </div>
+          <div
+            class="opt multi"
+            data-val="nao-sei-obj"
+            onclick="tog(this, 'q_obj')"
+          >
+            <div class="chk"></div>
+            <div>
+              <div class="opt-lbl">Não sei — quero orientação completa</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label
+            >Conte mais sobre sua situação
+            <span class="fopt">(opcional mas recomendado)</span></label
+          >
+          <textarea
+            id="q_obs"
+            placeholder="Ex: fui notificado pela Receita com prazo até XX/XX — o imóvel está no meu nome mas o alvará foi emitido na minha empresa — nunca recolhi o INSS e preciso vender o imóvel..."
+          ></textarea>
+        </div>
+
+        <div class="abox">
+          <strong>✓ Atendimento presencial ou digital — você escolhe.</strong>
+          Atendemos no escritório em Alta Floresta/MT ou de forma totalmente
+          remota, com envio de documentação por WhatsApp ou e-mail. Sem
+          necessidade de deslocamento quando preferir o atendimento digital.
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-g" onclick="back(5)">← Voltar</button>
+          <button class="btn btn-p" onclick="submit()">
+            Enviar para análise ✓
+          </button>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success" id="success">
+        <div class="s-icon">✓</div>
+        <h2 class="s-title">Solicitação recebida!</h2>
+        <p class="s-text" id="s-text">
+          Obrigado. Nossa especialista Grazielle vai analisar as informações e
+          entrar em contato em até 24 horas.
+        </p>
+        <div class="s-card" id="s-summary"></div>
+      </div>
+
+      <footer>
+        <div class="fb">Alves e Queiroz · Engenharia | Arquitetura</div>
+        <div class="fc">+55 66 9 9626-7717 · Alta Floresta/MT</div>
+      </footer>
+    </div>
+    <!-- /wrap -->
+
+    <script>
+      // ── STATE ────────────────────────────────────────────────────────────────────
+      let cur = 1;
+      const total = 5;
+      const A = {};
+
+      // ── SELECTION ────────────────────────────────────────────────────────────────
+      function sel(el, gid) {
+        document
+          .getElementById(gid)
+          .querySelectorAll(".opt")
+          .forEach((o) => o.classList.remove("sel"));
+        el.classList.add("sel");
+        A[gid] = el.dataset.val;
+      }
+      function tog(el, gid) {
+        el.classList.toggle("sel");
+        if (!A[gid]) A[gid] = [];
+        const v = el.dataset.val;
+        if (el.classList.contains("sel")) {
+          if (!A[gid].includes(v)) A[gid].push(v);
+        } else {
+          A[gid] = A[gid].filter((x) => x !== v);
+        }
+      }
+
+      // ── CONDITIONALS ─────────────────────────────────────────────────────────────
+      function toggleStatus(v) {
+        const db = document.getElementById("datas-block");
+        const cb = document.getElementById("concluida-block");
+        const nb = document.getElementById("nao-iniciada-block");
+        const opt = document.getElementById("termino-opt");
+        db.classList.remove("show");
+        cb.classList.remove("show");
+        nb.classList.remove("show");
+        if (v === "nao-iniciada") {
+          nb.classList.add("show");
+          document.getElementById("q_inicio_mes").value = "";
+          document.getElementById("q_inicio_ano").value = "";
+          document.getElementById("q_inicio_val").value = "";
+          document.getElementById("q_termino_mes").value = "";
+          document.getElementById("q_termino_ano").value = "";
+          document.getElementById("q_termino_val").value = "";
+        } else if (v === "andamento") {
+          db.classList.add("show");
+          opt.textContent = "(opcional)";
+        } else if (v === "concluida") {
+          db.classList.add("show");
+          cb.classList.add("show");
+          opt.textContent = "(obrigatório)";
+        }
+      }
+
+      function togglePessoa(v) {
+        const el = document.getElementById("pj-alert");
+        v === "juridica"
+          ? el.classList.add("show")
+          : el.classList.remove("show");
+      }
+
+      function toggleNotif(v) {
+        const el = document.getElementById("notif-alert");
+        v === "sim" ? el.classList.add("show") : el.classList.remove("show");
+      }
+
+      function toggleDocs(v) {
+        const el = document.getElementById("alvara-alert");
+        // Show the alignment warning for all options — it's always relevant
+        el.classList.add("show");
+      }
+
+      function toggleNotas(v) {
+        const el = document.getElementById("notas-info");
+        v === "sim" ? el.classList.add("show") : el.classList.remove("show");
+      }
+
+      // ── NAVIGATION ───────────────────────────────────────────────────────────────
+      function go(from) {
+        // Validações por etapa
+        if (from === 1) {
+          if (!A.q_pessoa) return shake("q_pessoa");
+          if (!document.getElementById("q_nome").value.trim())
+            return shake("q_nome");
+          if (!document.getElementById("q_whats").value.trim())
+            return shake("q_whats");
+        }
+        if (from === 2) {
+          if (!A.q_tipo) return shake("q_tipo");
+          if (!document.getElementById("q_estado").value)
+            return shake("q_estado");
+          if (!document.getElementById("q_cidade").value)
+            return shake("q_cidade");
+        }
+        if (from === 3) {
+          if (!A.q_status) return shake("q_status");
+          if (A.q_status !== "nao-iniciada") {
+            if (!document.getElementById("q_inicio_val").value)
+              return shake("q_inicio");
+            if (
+              A.q_status === "concluida" &&
+              !document.getElementById("q_termino_val").value
+            )
+              return shake("q_termino");
+          }
+          if (!A.q_docs) return shake("q_docs");
+        }
+        if (from === 4) {
+          if (!document.getElementById("q_m2").value) return shake("q_m2");
+          if (!A.q_piscina) return shake("q_piscina");
+        }
+
+        document.getElementById("s" + from).classList.remove("active");
+        cur = from + 1;
+        document.getElementById("s" + cur).classList.add("active");
+        prog(cur);
+        scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function back(from) {
+        document.getElementById("s" + from).classList.remove("active");
+        cur = from - 1;
+        document.getElementById("s" + cur).classList.add("active");
+        prog(cur);
+        scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function prog(step) {
+        const pct = Math.round(((step - 1) / total) * 100);
+        document.getElementById("prog-fill").style.width = pct + "%";
+        document.getElementById("prog-lbl").textContent =
+          "Etapa " + step + " de " + total;
+      }
+
+      // ── SUBMIT ───────────────────────────────────────────────────────────────────
+      function submit() {
+        if (!A.q_obj || A.q_obj.length === 0) return shake("q_obj");
+
+        const nome = document.getElementById("q_nome").value.trim();
+        const doc = document.getElementById("q_doc").value.trim();
+        const whats = document.getElementById("q_whats").value.trim();
+        const email = document.getElementById("q_email").value.trim() || "—";
+        const m2 = document.getElementById("q_m2").value;
+        const estado = document.getElementById("q_estado").value;
+        const cidade = document.getElementById("q_cidade").value || "—";
+        const inicio = document.getElementById("q_inicio_val")
+          ? document.getElementById("q_inicio_val").value
+          : "";
+        const tipo = A.q_tipo || "—";
+        const status = A.q_status || "—";
+        const pessoa = A.q_pessoa || "—";
+        const notif = A.q_notif || "—";
+        const docs = A.q_docs || "—";
+        const piscina = A.q_piscina || "—";
+        const notas = A.q_notas || "—";
+        const materiais = Array.isArray(A.q_materiais)
+          ? A.q_materiais.join(", ")
+          : A.q_materiais || "—";
+        const objetivos = Array.isArray(A.q_obj)
+          ? A.q_obj.join(", ")
+          : A.q_obj || "—";
+        const obs = document.getElementById("q_obs")
+          ? document.getElementById("q_obs").value.trim()
+          : "";
+
+        // Labels legíveis
+        const tipoL = {
+          unifamiliar: "Residencial Unifamiliar",
+          multifamiliar: "Residencial Multifamiliar",
+          comercial: "Comercial / Misto",
+          galpao: "Galpão / Indústria",
+          popular: "Popular / MCMV",
+        };
+        const statusL = {
+          "nao-iniciada": "Não iniciada",
+          andamento: "Em andamento",
+          concluida: "Concluída",
+        };
+        const docsL = {
+          "alvara-projeto": "Alvará + Projeto",
+          "so-projeto": "Só projeto",
+          "sem-documentacao": "Sem documentação",
+          "nao-sei": "Não sabe",
+        };
+        const objL = {
+          "acompanhamento-obra": "Acompanhamento desde o início",
+          "regularizar-inss": "Regularizar INSS em aberto",
+          averbar: "Averbar a obra no RI",
+          "vender-financiado": "Vender financiado / FGTS",
+          reduzir: "Reduzir o INSS apurado",
+          "notificacao-rf": "Recebi notificação da Receita",
+          "nao-sei-obj": "Não sei — quero orientação",
+        };
+
+        const objDisplay = Array.isArray(A.q_obj)
+          ? A.q_obj.map((v) => objL[v] || v).join(", ")
+          : "—";
+
+        // Verificar decadência
+        let decadente = false;
+        let termino = "";
+        if (status === "concluida") {
+          const tEl = document.getElementById("q_termino_val");
+          if (tEl) termino = tEl.value;
+          if (termino) {
+            const anos =
+              (new Date() - new Date(termino + "-01")) /
+              (1000 * 60 * 60 * 24 * 365);
+            if (anos >= 5) decadente = true;
+          }
+        }
+
+        // ── MONTA MENSAGEM WHATSAPP ─────────────────────────────────────────────
+        let msg = `📋 *ANÁLISE INSS DE OBRA — AQ ENGENHARIA*\n`;
+        msg += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+        msg += `👤 *IDENTIFICAÇÃO*\n`;
+        msg += `Tipo: ${pessoa === "fisica" ? "Pessoa Física" : "Pessoa Jurídica"}\n`;
+        msg += `Nome/Razão Social: ${nome}\n`;
+        msg += `CPF/CNPJ: ${doc}\n`;
+        msg += `WhatsApp: ${whats}\n`;
+        msg += `E-mail: ${email}\n`;
+        msg += `Notificação Receita: ${notif === "sim" ? "Sim" : "Não"}\n\n`;
+
+        msg += `🏗️ *OBRA*\n`;
+        msg += `Tipo: ${tipoL[tipo] || tipo}\n`;
+        msg += `Cidade/Estado: ${cidade} — ${estado}\n`;
+        msg += `Metragem: ${m2 ? m2 + " m²" : "—"}\n`;
+        msg += `Situação: ${statusL[status] || status}\n`;
+        if (inicio) msg += `Início: ${formatarData(inicio)}\n`;
+        if (termino)
+          msg += `Término: ${formatarData(termino)}${decadente ? " ⚠️ POSSÍVEL DECADÊNCIA" : ""}\n`;
+        msg += `Documentação: ${docsL[docs] || docs}\n`;
+        msg += `Piscina/Churrasqueira: ${piscina === "sim" ? "Sim" : "Não"}\n`;
+        if (materiais !== "nenhum")
+          msg += `Materiais especiais: ${materiais}\n`;
+        msg += `Notas fiscais: ${notas}\n\n`;
+
+        msg += `🎯 *OBJETIVOS*\n`;
+        msg += `${objDisplay}\n`;
+
+        if (obs) msg += `\n💬 *OBSERVAÇÕES*\n${obs}`;
+
+        if (decadente) {
+          msg += `\n\n⚠️ *ALERTA: possível decadência identificada — verificar redução ou isenção.*`;
+        }
+
+        msg += `\n\n━━━━━━━━━━━━━━━━━━━━━━`;
+
+        const NUMERO_AQ = "5566996267717";
+        const CRM_ENDPOINT =
+          "https://script.google.com/macros/s/AKfycbyT-cSSRa8D-9L6BmVgB_edWcoWunOmPGdLXsOmc-nRL9H-vtZeXZrMnqJEpczNoFsT/exec";
+        const url = `https://wa.me/${NUMERO_AQ}?text=${encodeURIComponent(msg)}`;
+
+        // Enviar ao CRM (Google Sheets)
+        if (CRM_ENDPOINT) {
+          fetch(CRM_ENDPOINT, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              tipo: "inss",
+              ts: new Date().toISOString(),
+              nome,
+              cpf_cnpj: doc,
+              whats,
+              email,
+              tipo_obra: tipoL[tipo] || tipo,
+              estado,
+              cidade,
+              m2: m2 || "—",
+              situacao: statusL[status] || status,
+              inicio: inicio ? formatarData(inicio) : "",
+              termino: termino ? formatarData(termino) : "",
+              documentacao: docsL[docs] || docs,
+              piscina: piscina === "sim" ? "Sim" : "Não",
+              materiais_especiais: materiais,
+              notas_fiscais: notas,
+              objetivos: objDisplay,
+              observacoes: obs,
+              decadencia: decadente
+                ? "ALERTA — possível decadência"
+                : "Não identificada",
+            }),
+          }).catch(() => {});
+        }
+
+        // Tela de sucesso
+        document.getElementById("s5").classList.remove("active");
+        document.getElementById("prog-wrap").style.display = "none";
+
+        const first = nome.split(" ")[0];
+        document.getElementById("s-text").innerHTML =
+          `Obrigado, <strong style="color:var(--accent)">${first}</strong>. Nossa especialista <strong style="color:var(--accent)">Grazielle</strong> vai analisar as informações e entrar em contato em até 24 horas pelo WhatsApp informado.`;
+
+        let extra = decadente
+          ? '<br><span style="color:#4ade80">⚠️ Possível decadência identificada — pode haver redução ou isenção do INSS.</span>'
+          : "";
+
+        document.getElementById("s-summary").innerHTML =
+          `<strong>Resumo da solicitação</strong>
+    Tipo: ${tipoL[tipo] || tipo} · ${estado}<br>
+    Metragem: ${m2 ? m2 + " m²" : "—"} · Situação: ${statusL[status] || status}${extra}`;
+
+        document.getElementById("success").classList.add("show");
+        scrollTo({ top: 0, behavior: "smooth" });
+
+        // Abre WhatsApp após breve delay
+        setTimeout(() => {
+          window.open(url, "_blank");
+        }, 800);
+      }
+
+      function tipoLabel(v) {
+        const m = {
+          unifamiliar: "Residencial Unifamiliar",
+          multifamiliar: "Residencial Multifamiliar",
+          comercial: "Comercial",
+          galpao: "Galpão/Industrial",
+          popular: "Casa Popular",
+        };
+        return m[v] || v;
+      }
+
+      // ── UTILS ────────────────────────────────────────────────────────────────────
+      // ── DATAS CUSTOMIZADAS ────────────────────────────────────────────────────────
+      function populaAnos() {
+        const anoAtual = new Date().getFullYear();
+        const selects = ["q_inicio_ano", "q_termino_ano"];
+        selects.forEach((id) => {
+          const sel = document.getElementById(id);
+          if (!sel) return;
+          for (let a = anoAtual; a >= 2000; a--) {
+            const opt = document.createElement("option");
+            opt.value = a;
+            opt.textContent = a;
+            sel.appendChild(opt);
+          }
+        });
+      }
+
+      function syncData(campo) {
+        const mes = document.getElementById("q_" + campo + "_mes").value;
+        const ano = document.getElementById("q_" + campo + "_ano").value;
+        const hidden = document.getElementById("q_" + campo + "_val");
+        // Monta YYYY-MM se ambos preenchidos, ou só YYYY se só ano
+        if (ano && mes) hidden.value = ano + "-" + mes;
+        else if (ano) hidden.value = ano;
+        else hidden.value = "";
+      }
+
+      function formatarData(val) {
+        if (!val) return "—";
+        const meses = [
+          "Jan",
+          "Fev",
+          "Mar",
+          "Abr",
+          "Mai",
+          "Jun",
+          "Jul",
+          "Ago",
+          "Set",
+          "Out",
+          "Nov",
+          "Dez",
+        ];
+        if (val.includes("-")) {
+          const [a, m] = val.split("-");
+          return meses[parseInt(m) - 1] + "/" + a;
+        }
+        return val;
+      }
+
+      function maskDoc(el) {
+        // Remove tudo que não é dígito e limita a 14 dígitos (tamanho máximo do CNPJ)
+        let d = el.value.replace(/\D/g, "").slice(0, 14);
+
+        let formatted;
+        if (d.length <= 11) {
+          // Formata como CPF: 000.000.000-00
+          if (d.length > 9)
+            formatted =
+              d.slice(0, 3) +
+              "." +
+              d.slice(3, 6) +
+              "." +
+              d.slice(6, 9) +
+              "-" +
+              d.slice(9);
+          else if (d.length > 6)
+            formatted = d.slice(0, 3) + "." + d.slice(3, 6) + "." + d.slice(6);
+          else if (d.length > 3) formatted = d.slice(0, 3) + "." + d.slice(3);
+          else formatted = d;
+        } else {
+          // Formata como CNPJ: 00.000.000/0001-00
+          if (d.length > 12)
+            formatted =
+              d.slice(0, 2) +
+              "." +
+              d.slice(2, 5) +
+              "." +
+              d.slice(5, 8) +
+              "/" +
+              d.slice(8, 12) +
+              "-" +
+              d.slice(12);
+          else if (d.length > 8)
+            formatted =
+              d.slice(0, 2) +
+              "." +
+              d.slice(2, 5) +
+              "." +
+              d.slice(5, 8) +
+              "/" +
+              d.slice(8);
+          else if (d.length > 5)
+            formatted = d.slice(0, 2) + "." + d.slice(2, 5) + "." + d.slice(5);
+          else formatted = d.slice(0, 2) + "." + d.slice(2);
+        }
+
+        el.value = formatted;
+      }
+
+      // ── CIDADES POR ESTADO ────────────────────────────────────────────────────────
+      const CIDADES = {
+        Acre: [
+          "Rio Branco",
+          "Cruzeiro do Sul",
+          "Sena Madureira",
+          "Tarauacá",
+          "Feijó",
+          "Brasiléia",
+          "Xapuri",
+          "Epitaciolândia",
+          "Plácido de Castro",
+          "Senador Guiomard",
+          "Outra cidade",
+        ],
+        Alagoas: [
+          "Maceió",
+          "Arapiraca",
+          "Rio Largo",
+          "Palmeira dos Índios",
+          "União dos Palmares",
+          "Penedo",
+          "São Miguel dos Campos",
+          "Delmiro Gouveia",
+          "Coruripe",
+          "Marechal Deodoro",
+          "Outra cidade",
+        ],
+        Amapá: [
+          "Macapá",
+          "Santana",
+          "Laranjal do Jari",
+          "Oiapoque",
+          "Mazagão",
+          "Porto Grande",
+          "Tartarugalzinho",
+          "Pedra Branca do Amapari",
+          "Ferreira Gomes",
+          "Outra cidade",
+        ],
+        Amazonas: [
+          "Manaus",
+          "Parintins",
+          "Itacoatiara",
+          "Manacapuru",
+          "Coari",
+          "Tefé",
+          "Tabatinga",
+          "Maués",
+          "Humaitá",
+          "São Gabriel da Cachoeira",
+          "Manicoré",
+          "Lábrea",
+          "Eirunepé",
+          "Careiro",
+          "Benjamin Constant",
+          "Outra cidade",
+        ],
+        Bahia: [
+          "Salvador",
+          "Feira de Santana",
+          "Vitória da Conquista",
+          "Camaçari",
+          "Itabuna",
+          "Juazeiro",
+          "Ilhéus",
+          "Lauro de Freitas",
+          "Jequié",
+          "Teixeira de Freitas",
+          "Barreiras",
+          "Porto Seguro",
+          "Simões Filho",
+          "Paulo Afonso",
+          "Alagoinhas",
+          "Luís Eduardo Magalhães",
+          "Senhor do Bonfim",
+          "Valença",
+          "Candeias",
+          "Serrinha",
+          "Outra cidade",
+        ],
+        Ceará: [
+          "Fortaleza",
+          "Caucaia",
+          "Juazeiro do Norte",
+          "Maracanaú",
+          "Sobral",
+          "Crato",
+          "Itapipoca",
+          "Maranguape",
+          "Iguatu",
+          "Quixadá",
+          "Pacatuba",
+          "Aquiraz",
+          "Canindé",
+          "Russas",
+          "Limoeiro do Norte",
+          "Outra cidade",
+        ],
+        "Distrito Federal": [
+          "Brasília",
+          "Taguatinga",
+          "Ceilândia",
+          "Samambaia",
+          "Plano Piloto",
+          "Planaltina",
+          "Gama",
+          "Sobradinho",
+          "Águas Claras",
+          "Recanto das Emas",
+          "Guará",
+          "Lago Sul",
+          "Lago Norte",
+          "Núcleo Bandeirante",
+          "Outra cidade",
+        ],
+        "Espírito Santo": [
+          "Vitória",
+          "Serra",
+          "Vila Velha",
+          "Cariacica",
+          "Cachoeiro de Itapemirim",
+          "Linhares",
+          "São Mateus",
+          "Colatina",
+          "Guarapari",
+          "Aracruz",
+          "Viana",
+          "Nova Venécia",
+          "Barra de São Francisco",
+          "Marataízes",
+          "Outra cidade",
+        ],
+        Goiás: [
+          "Goiânia",
+          "Aparecida de Goiânia",
+          "Anápolis",
+          "Rio Verde",
+          "Luziânia",
+          "Águas Lindas de Goiás",
+          "Valparaíso de Goiás",
+          "Trindade",
+          "Formosa",
+          "Novo Gama",
+          "Catalão",
+          "Jataí",
+          "Itumbiara",
+          "Caldas Novas",
+          "Inhumas",
+          "Senador Canedo",
+          "Goianésia",
+          "Uruaçu",
+          "Porangatu",
+          "Goianira",
+          "Outra cidade",
+        ],
+        Maranhão: [
+          "São Luís",
+          "Imperatriz",
+          "São José de Ribamar",
+          "Timon",
+          "Caxias",
+          "Codó",
+          "Paço do Lumiar",
+          "Açailândia",
+          "Bacabal",
+          "Balsas",
+          "Santa Inês",
+          "Pinheiro",
+          "Chapadinha",
+          "Coroatá",
+          "Itapecuru Mirim",
+          "Outra cidade",
+        ],
+        "Mato Grosso": [
+          "Alta Floresta",
+          "Sinop",
+          "Cuiabá",
+          "Várzea Grande",
+          "Rondonópolis",
+          "Tangará da Serra",
+          "Cáceres",
+          "Sorriso",
+          "Lucas do Rio Verde",
+          "Primavera do Leste",
+          "Barra do Garças",
+          "Nova Mutum",
+          "Colíder",
+          "Guarantã do Norte",
+          "Peixoto de Azevedo",
+          "Matupá",
+          "Terra Nova do Norte",
+          "Novo Mundo",
+          "Paranaíta",
+          "Carlinda",
+          "Apiacás",
+          "Nova Bandeirantes",
+          "Nova Monte Verde",
+          "Juara",
+          "Juína",
+          "Pontes e Lacerda",
+          "Campo Novo do Parecis",
+          "Campo Verde",
+          "Chapada dos Guimarães",
+          "Confresa",
+          "Diamantino",
+          "Dom Aquino",
+          "Feliz Natal",
+          "General Carneiro",
+          "Itiquira",
+          "Jaciara",
+          "Juruena",
+          "Nobres",
+          "Nortelândia",
+          "Nova Ubiratã",
+          "Paranatinga",
+          "Porto Alegre do Norte",
+          "Porto dos Gaúchos",
+          "Querência",
+          "Santa Carmem",
+          "Santo Antônio do Leverger",
+          "São Félix do Araguaia",
+          "São José do Rio Claro",
+          "Tapurah",
+          "Vera",
+          "Outra cidade",
+        ],
+        "Mato Grosso do Sul": [
+          "Campo Grande",
+          "Dourados",
+          "Três Lagoas",
+          "Corumbá",
+          "Ponta Porã",
+          "Naviraí",
+          "Nova Andradina",
+          "Sidrolândia",
+          "Maracaju",
+          "Aquidauana",
+          "Cassilândia",
+          "Paranaíba",
+          "Coxim",
+          "Rio Brilhante",
+          "Jardim",
+          "Amambai",
+          "Chapadão do Sul",
+          "Ivinhema",
+          "Bonito",
+          "Outra cidade",
+        ],
+        "Minas Gerais": [
+          "Belo Horizonte",
+          "Uberlândia",
+          "Contagem",
+          "Juiz de Fora",
+          "Betim",
+          "Montes Claros",
+          "Ribeirão das Neves",
+          "Uberaba",
+          "Governador Valadares",
+          "Ipatinga",
+          "Sete Lagoas",
+          "Divinópolis",
+          "Santa Luzia",
+          "Ibirité",
+          "Poços de Caldas",
+          "Patos de Minas",
+          "Pouso Alegre",
+          "Teófilo Otoni",
+          "Barbacena",
+          "Sabará",
+          "Vespasiano",
+          "Conselheiro Lafaiete",
+          "Muriaé",
+          "Araguari",
+          "Coronel Fabriciano",
+          "Ituiutaba",
+          "Passos",
+          "Lavras",
+          "Itajubá",
+          "Outra cidade",
+        ],
+        Pará: [
+          "Belém",
+          "Ananindeua",
+          "Santarém",
+          "Marabá",
+          "Castanhal",
+          "Parauapebas",
+          "Altamira",
+          "Tucuruí",
+          "Abaetetuba",
+          "Redenção",
+          "Itaituba",
+          "Barcarena",
+          "Bragança",
+          "Cametá",
+          "Paragominas",
+          "Marituba",
+          "Tailândia",
+          "Capanema",
+          "Benevides",
+          "São Félix do Xingu",
+          "Outra cidade",
+        ],
+        Paraíba: [
+          "João Pessoa",
+          "Campina Grande",
+          "Santa Rita",
+          "Patos",
+          "Bayeux",
+          "Sousa",
+          "Cajazeiras",
+          "Cabedelo",
+          "Guarabira",
+          "Sapé",
+          "Outra cidade",
+        ],
+        Paraná: [
+          "Curitiba",
+          "Londrina",
+          "Maringá",
+          "Ponta Grossa",
+          "Cascavel",
+          "São José dos Pinhais",
+          "Foz do Iguaçu",
+          "Colombo",
+          "Guarapuava",
+          "Paranaguá",
+          "Araucária",
+          "Toledo",
+          "Apucarana",
+          "Pinhais",
+          "Campo Largo",
+          "Arapongas",
+          "Almirante Tamandaré",
+          "Umuarama",
+          "Cambé",
+          "Piraquara",
+          "Sarandi",
+          "Fazenda Rio Grande",
+          "Paranavaí",
+          "Francisco Beltrão",
+          "Pato Branco",
+          "Rolândia",
+          "Cianorte",
+          "Telêmaco Borba",
+          "Castro",
+          "Outra cidade",
+        ],
+        Pernambuco: [
+          "Recife",
+          "Caruaru",
+          "Olinda",
+          "Petrolina",
+          "JABOATÃO dos Guararapes",
+          "Paulista",
+          "Paudalho",
+          "Cabo de Santo Agostinho",
+          "Camaragibe",
+          "Garanhuns",
+          "Vitória de Santo Antão",
+          "Igarassu",
+          "Santa Cruz do Capibaribe",
+          "Araripina",
+          "Gravatá",
+          "Outra cidade",
+        ],
+        Piauí: [
+          "Teresina",
+          "Parnaíba",
+          "Picos",
+          "Piripiri",
+          "Floriano",
+          "Campo Maior",
+          "Barras",
+          "União",
+          "José de Freitas",
+          "Altos",
+          "Outra cidade",
+        ],
+        "Rio de Janeiro": [
+          "Rio de Janeiro",
+          "São Gonçalo",
+          "Duque de Caxias",
+          "Nova Iguaçu",
+          "Niterói",
+          "Belford Roxo",
+          "São João de Meriti",
+          "Campos dos Goytacazes",
+          "Petrópolis",
+          "Volta Redonda",
+          "Magé",
+          "Itaboraí",
+          "Macaé",
+          "Mesquita",
+          "Cabo Frio",
+          "Nova Friburgo",
+          "Barra Mansa",
+          "Angra dos Reis",
+          "Nilópolis",
+          "Teresópolis",
+          "Outra cidade",
+        ],
+        "Rio Grande do Norte": [
+          "Natal",
+          "Mossoró",
+          "Parnamirim",
+          "São Gonçalo do Amarante",
+          "Macaíba",
+          "Ceará-Mirim",
+          "Caicó",
+          "Assú",
+          "Currais Novos",
+          "Santa Cruz",
+          "Outra cidade",
+        ],
+        "Rio Grande do Sul": [
+          "Porto Alegre",
+          "Caxias do Sul",
+          "Canoas",
+          "Pelotas",
+          "Santa Maria",
+          "Gravataí",
+          "Viamão",
+          "Novo Hamburgo",
+          "São Leopoldo",
+          "Rio Grande",
+          "Alvorada",
+          "Passo Fundo",
+          "Sapucaia do Sul",
+          "Uruguaiana",
+          "Santa Cruz do Sul",
+          "Cachoeirinha",
+          "Bagé",
+          "Bento Gonçalves",
+          "Erechim",
+          "Guaíba",
+          "Outra cidade",
+        ],
+        Rondônia: [
+          "Porto Velho",
+          "Ji-Paraná",
+          "Ariquemes",
+          "Cacoal",
+          "Vilhena",
+          "Rolim de Moura",
+          "Jaru",
+          "Guajará-Mirim",
+          "Ouro Preto do Oeste",
+          "Espigão do Oeste",
+          "Pimenta Bueno",
+          "Machadinho do Oeste",
+          "Colorado do Oeste",
+          "Cerejeiras",
+          "Outra cidade",
+        ],
+        Roraima: [
+          "Boa Vista",
+          "Rorainópolis",
+          "Caracaraí",
+          "Alto Alegre",
+          "Mucajaí",
+          "Pacaraima",
+          "Bonfim",
+          "Cantá",
+          "Outra cidade",
+        ],
+        "Santa Catarina": [
+          "Joinville",
+          "Florianópolis",
+          "Blumenau",
+          "São José",
+          "Criciúma",
+          "Chapecó",
+          "Itajaí",
+          "Jaraguá do Sul",
+          "Lages",
+          "Palhoça",
+          "Balneário Camboriú",
+          "Biguaçu",
+          "São Bento do Sul",
+          "Caçador",
+          "Concórdia",
+          "Brusque",
+          "Tubarão",
+          "Araranguá",
+          "Canoinhas",
+          "Videira",
+          "Outra cidade",
+        ],
+        "São Paulo": [
+          "São Paulo",
+          "Guarulhos",
+          "Campinas",
+          "São Bernardo do Campo",
+          "Santo André",
+          "Ribeirão Preto",
+          "Osasco",
+          "Sorocaba",
+          "Mauá",
+          "São José dos Campos",
+          "Mogi das Cruzes",
+          "Santos",
+          "Jundiaí",
+          "Piracicaba",
+          "Barueri",
+          "Carapicuíba",
+          "Contagem",
+          "Itaquaquecetuba",
+          "Franca",
+          "Limeira",
+          "Suzano",
+          "Diadema",
+          "Bauru",
+          "São Vicente",
+          "Taubaté",
+          "Americana",
+          "Praia Grande",
+          "Paulista",
+          "Caraguatatuba",
+          "Cotia",
+          "Outra cidade",
+        ],
+        Sergipe: [
+          "Aracaju",
+          "Nossa Senhora do Socorro",
+          "Lagarto",
+          "Itabaiana",
+          "São Cristóvão",
+          "Estância",
+          "Tobias Barreto",
+          "Simão Dias",
+          "Nossa Senhora da Glória",
+          "Propriá",
+          "Outra cidade",
+        ],
+        Tocantins: [
+          "Palmas",
+          "Araguaína",
+          "Gurupi",
+          "Porto Nacional",
+          "Paraíso do Tocantins",
+          "Araguatins",
+          "Colinas do Tocantins",
+          "Guaraí",
+          "Miracema do Tocantins",
+          "Tocantinópolis",
+          "Outra cidade",
+        ],
+      };
+
+      function updateCidades(estado) {
+        const sel = document.getElementById("q_cidade");
+        const lista = CIDADES[estado] || ["Outra cidade"];
+        sel.innerHTML =
+          '<option value="">Selecione a cidade...</option>' +
+          lista.map((c) => `<option value="${c}">${c}</option>`).join("");
+        sel.disabled = !estado;
+      }
+
+      // Inicializa cidade desabilitada
+      document.addEventListener("DOMContentLoaded", () => {
+        const sc = document.getElementById("q_cidade");
+        if (sc) sc.disabled = true;
+        populaAnos();
+      });
+
+      function maskPhone(el) {
+        let v = el.value.replace(/\D/g, "").slice(0, 11);
+        if (v.length > 6)
+          v = "(" + v.slice(0, 2) + ") " + v.slice(2, 7) + "-" + v.slice(7);
+        else if (v.length > 2) v = "(" + v.slice(0, 2) + ") " + v.slice(2);
+        else if (v.length > 0) v = "(" + v;
+        el.value = v;
+      }
+
+      function shake(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.animation = "none";
+        el.offsetHeight;
+        el.style.animation = "shake .4s ease";
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => (el.style.animation = ""), 400);
+      }
+
+      const st = document.createElement("style");
+      st.textContent = `@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}`;
+      document.head.appendChild(st);
+    </script>
+  </body>
+</html>
