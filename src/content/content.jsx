@@ -207,9 +207,9 @@ const content = {
     },
     solutions: {
       miniTag: "Soluções Rápidas",
-      title: "Resolva etapas importantes do seu projeto com agilidade",
+      title: "Cuidamos da sua obra sem você se perder na burocracia",
       subtitle:
-        " Acesse nossos serviços especializados para regularização e análise técnica, com praticidade e segurança desde o primeiro passo.",
+        "Deixe a parte técnica com quem entende. Cuidamos da regularização e análise do seu projeto com agilidade, segurança e zero complicação pra você.",
       cards: {
         card1: {
           icon: (
@@ -218,6 +218,8 @@ const content = {
             </>
           ),
           label: "Regularizar INSS da obra",
+          subtitle:
+            "Evite multas e problemas legais. A gente resolve toda a regularização pra você.",
           link: "./inss.html",
         },
         card2: {
@@ -227,6 +229,8 @@ const content = {
             </>
           ),
           label: "Fazer diagnóstico de projeto",
+          subtitle:
+            "Descubra erros, economize na obra e tenha um plano claro antes de executar.",
           link: "./leads.html",
         },
       },
