@@ -11,6 +11,7 @@ import {
   AlignJustify,
   MapPin,
   FileText,
+  PenTool,
 } from "lucide-react";
 import { Link as ScrollLink } from "react-scroll";
 import { Link as RouterLink } from "react-router-dom";
@@ -36,7 +37,10 @@ export default function SidebarSocial({ colorMode, mode = "blog" }) {
     if (mode === "site") {
       setVisibleSections(paired);
     } else {
-      const existing = paired.filter(({ id }) => !!document.getElementById(id));
+      const existing = paired.filter(({ id }) => {
+        if (id === "portfolio") return true;
+        return !!document.getElementById(id);
+      });
       setVisibleSections(existing);
     }
   }, [mode, t]);
@@ -44,8 +48,8 @@ export default function SidebarSocial({ colorMode, mode = "blog" }) {
   const icons = [
     <HomeIcon />,
     <UserSearch />,
+    <PenTool />,
     <ServerIcon />,
-    <FileText />,
     <HelpCircle />,
 
     <MapPin />,
@@ -119,7 +123,15 @@ export default function SidebarSocial({ colorMode, mode = "blog" }) {
                             <a className="flex items-center w-full p-3 transition-colors cursor-pointer p-ripple border-round text-700 hover:surface-100 transition-duration-150">
                               {icons[index] || <HelpCircle />}
                               <span className="ml-[8px]">
-                                {mode === "site" ? (
+                                {id === "portfolio" ? (
+                                  <a
+                                    href="portfolio.html"
+                                    className="align-text-top cursor-pointer"
+                                    onClick={() => setVisible(false)}
+                                  >
+                                    {label}
+                                  </a>
+                                ) : mode === "site" ? (
                                   <RouterLink
                                     to={
                                       id === "inicio"
@@ -127,6 +139,7 @@ export default function SidebarSocial({ colorMode, mode = "blog" }) {
                                         : `/${id.toLowerCase()}`
                                     }
                                     className="align-text-top cursor-pointer"
+                                    onClick={() => setVisible(false)}
                                   >
                                     {label}
                                   </RouterLink>
@@ -138,6 +151,7 @@ export default function SidebarSocial({ colorMode, mode = "blog" }) {
                                     duration={500}
                                     offset={-70}
                                     className="align-text-top cursor-pointer"
+                                    onClick={() => setVisible(false)}
                                   >
                                     {label}
                                   </ScrollLink>
